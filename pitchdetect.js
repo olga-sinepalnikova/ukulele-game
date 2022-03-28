@@ -6,8 +6,7 @@ var analyser = null;
 var theBuffer = null;
 var DEBUGCANVAS = null;
 var mediaStreamSource = null;
-var detectorElem, 
-	canvasElem,
+var canvasElem,
 	waveCanvas,
 	pitchElem,
 	noteElem,
@@ -18,7 +17,6 @@ window.onload = function() {
 	audioContext = new AudioContext();
 	MAX_SIZE = Math.max(4,Math.floor(audioContext.sampleRate/5000));	// corresponds to a 5kHz signal
 
-	detectorElem = document.getElementById( "detector" );
 	canvasElem = document.getElementById( "output" );
 	DEBUGCANVAS = document.getElementById( "waveform" );
 	if (DEBUGCANVAS) {
@@ -30,31 +28,6 @@ window.onload = function() {
 	noteElem = document.getElementById( "note" );
 	detuneElem = document.getElementById( "detune" );
 	detuneAmount = document.getElementById( "detune_amt" );
-
-	detectorElem.ondragenter = function () { 
-		this.classList.add("droptarget"); 
-		return false; };
-	detectorElem.ondragleave = function () { this.classList.remove("droptarget"); return false; };
-	detectorElem.ondrop = function (e) {
-  		this.classList.remove("droptarget");
-  		e.preventDefault();
-		theBuffer = null;
-
-	  	var reader = new FileReader();
-	  	reader.onload = function (event) {
-	  		audioContext.decodeAudioData( event.target.result, function(buffer) {
-	    		theBuffer = buffer;
-	  		}, function(){alert("error loading!");} ); 
-
-	  	};
-	  	reader.onerror = function (event) {
-	  		alert("Error: " + reader.error );
-		};
-	  	reader.readAsArrayBuffer(e.dataTransfer.files[0]);
-	  	return false;
-	};
-
-
 
 }
 
@@ -85,7 +58,6 @@ function gotStream(stream) {
     updatePitch();
 }
 
-
 function toggleLiveInput() {
 	audioContext = new AudioContext();
     getUserMedia(
@@ -110,6 +82,7 @@ var buf = new Float32Array( buflen );
 
 var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
+//странные формулы, найди откуда взяты и 
 function noteFromPitch( frequency ) {
 	var noteNum = 12 * (Math.log( frequency / 440 )/Math.log(2) );
 	return Math.round( noteNum ) + 69;
@@ -199,13 +172,11 @@ function updatePitch( time ) {
 	}
 
  	if (ac == -1) {
- 		detectorElem.className = "vague";
 	 	pitchElem.innerText = "--";
 		noteElem.innerText = "-";
 		detuneElem.className = "";
 		detuneAmount.innerText = "--";
  	} else {
-	 	detectorElem.className = "confident";
 	 	pitch = ac;
 	 	pitchElem.innerText = Math.round( pitch ) ;
 	 	var note =  noteFromPitch( pitch );
