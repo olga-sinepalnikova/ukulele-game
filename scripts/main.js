@@ -1,10 +1,10 @@
-
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d'); 
 
 context.clearRect(0, 0, canvas.width, canvas.height);
 
-let keyboard = '' ; 
+var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+var keyboard = '' ; 
 
 /* класть ноты в буфер, если больше 3-4 одинаковых подряд , то ставить истину\
 	(12 нот, добваь клавиш) */
@@ -63,14 +63,24 @@ class Arrow{
 
 };
 
-const arrowArray = [];
+var arrowArray = [];
 const fakeSong = ['left', 'up', 'right', 'down'];
 for (let i = 1; i <= 4; i++){
-	arrowArray.push(new Arrow(fakeSong[i - 1], 'red', i * 40))
+	arrowArray.push(new Arrow(fakeSong[i - 1], 'red', i * 40));
 	console.log(arrowArray);
 };
 
-let accuracy = 0;
+// создание всех нот в setTimeout с одинаковым откладываем (посмотри ритм сколько миллисекунд)
+// список с нотами (?)
+
+setTimeout(() => {
+	for (let i = 1; i <= 4; i++){
+	arrowArray.push(new Arrow(fakeSong[i - 1], 'red', i * 40));
+	console.log(arrowArray);
+};
+}, 1000);
+
+var accuracy = 0;
 function detectAccuracy(y_of_elem){
 	if (40 > y_of_elem && y_of_elem > 10){
 		accuracy = 1;
@@ -86,19 +96,24 @@ function detectAccuracy(y_of_elem){
 /* учитывать - направление, индекс -> брать наименьший индекс*/
 function arrowsHandler(){
 	for (let i = 0; i < arrowArray.length; i++){
-		arrowArray[i].draw();
-		arrowArray[i].move();
+		if (arrowArray[i]) {
+			arrowArray[i].draw();
+			arrowArray[i].move();
+		};
+
 	};
 
 	for (let i = 0; i < arrowArray.length; i++){
 		if (arrowArray[i]) {
 			if (arrowArray[i].y == 10){
-				arrowArray.splice(i, 1);
+				delete arrowArray[0];
+				arrowArray = arrowArray.filter(element => element != null);
 			};
 	
 			if (keyboard == arrowArray[i].note) {
 				detectAccuracy(arrowArray[i].y);
-				arrowArray.splice(i, 1);
+				delete arrowArray[0];
+				arrowArray = arrowArray.filter(element => element != null);
 				console.log(arrowArray);
 			};
 		};
