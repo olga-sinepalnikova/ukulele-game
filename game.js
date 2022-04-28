@@ -12,44 +12,6 @@ var keyboardDown = false;
 var canvas = document.getElementById('game_canvas');
 var context = canvas.getContext('2d');
 
-
-class Player {
-    constructor() {
-        this.width = 40;
-        this.height = 40;
-        this.x = canvas.width / 2;
-        this.y = canvas.height / 2;
-    }
-
-    draw() {
-        context.fillStyle = 'red';
-        context.fillRect(this.x, this.y, this.width, this.height);
-    }
-
-    move() {
-        if (!keyboardDown) {
-            switch (noteElem.innerText) {
-                case 'D':
-                    this.y -= this.height;
-                    break;
-                case 'F':
-                    this.x -= this.width;
-                    break;
-                case 'A':
-                    this.y += this.height;
-                    break;
-                case 'G':
-                    this.x += this.width;
-                    break;
-            }
-        }
-    }
-}
-
-const player = new Player();
-player.draw();
-
-
 // сделать очищение по времени (каждую секунду ?)
 function isNotePlaying(currentNote) {
     smallBuffer.push(currentNote);
@@ -60,13 +22,13 @@ function isNotePlaying(currentNote) {
             // console.log(`your note is ${currentNote}, and buffer is`, smallBuffer);
             keyboardDown = true;
         }
-    } else if (smallBuffer.length == 1) {
+    } else if (smallBuffer.length == 1 && duration >= 20) {
         if (!keyboardDown) {
             // console.log(`u r in else if, your note is ${currentNote}, and buffer is`, smallBuffer);
             keyboardDown = false;
         }
         console.log(playingNote, 'else if', smallBuffer - 1);
-    } else {
+    } else if (duration >= 20) {
         keyboardDown = false;
         // console.log('back to false', playingNote);
         smallBuffer.splice(0, smallBuffer.length - 1);

@@ -12,6 +12,7 @@ var canvasElem,
 	noteElem,
 	detuneElem,
 	detuneAmount;
+var duration = 0;
 
 window.onload = function () {
 	audioContext = new AudioContext();
@@ -179,7 +180,15 @@ function updatePitch(time) {
 		pitch = ac;
 		pitchElem.innerText = Math.round(pitch);
 		var note = noteFromPitch(pitch);
+		var lastNote = noteElem.innerHTML;
 		noteElem.innerHTML = noteStrings[note % 12];
+		var newNote = noteElem.innerHTML;
+		if (lastNote == newNote) {
+			duration++;
+		} else {
+			duration = 0;
+		}
+		console.log(duration, noteElem.innerHTML);
 
 		var detune = centsOffFromPitch(pitch, note);
 		if (detune == 0) {
