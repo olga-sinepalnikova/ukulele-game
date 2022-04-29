@@ -210,6 +210,6 @@ function updatePitch(time) {
 
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	player.move();
-	player.draw();
+	player.update();
 
 }

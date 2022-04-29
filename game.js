@@ -12,7 +12,6 @@ var keyboardDown = false;
 var canvas = document.getElementById('game_canvas');
 var context = canvas.getContext('2d');
 
-// сделать очищение по времени (каждую секунду ?)
 function isNotePlaying(currentNote) {
     smallBuffer.push(currentNote);
     if (smallBuffer.length >= 2 && smallBuffer[0] == smallBuffer[1]) {
@@ -35,17 +34,35 @@ function isNotePlaying(currentNote) {
     };
     // console.log(keyboardDown);
 }
-
-/* document.addEventListener('keydown', (e) => {
-    if (!keyboardDown) {
-        console.log('pressed button');
-        keyboardDown = true;
-    }
-    console.log(e.key);
-});
+document.addEventListener('keydown', keyboardControl(e));
 document.addEventListener('keyup', (e) => {
     if (keyboardDown) {
-        console.log('lol, unpressed');
+        // console.log('lol, unpressed');
         keyboardDown = false;
     }
-}); старый тест на реакцию 1 нажатие - 1 действие, даже если зажали*/
+});
+
+function keyboardControl(e) {
+    var pressedNote = 'nothing';
+    if (!keyboardDown) {
+        // console.log('pressed button');
+        keyboardDown = true;
+        switch (e.key) {
+            case 'ArrowUp':
+                pressedNote = 'D';
+                break;
+            case 'ArrowLeft':
+                pressedNote = 'F';
+                break;
+            case 'ArrowDown':
+                pressedNote = 'B';
+                break;
+            case 'ArrowRight':
+                pressedNote = 'C';
+                break;
+        }
+    }
+    return pressedNote
+}
+
+//  старый тест на реакцию 1 нажатие - 1 действие, даже если зажали
