@@ -1,18 +1,35 @@
-var playingNote = {
-    'D': false,
-    'F': false,
-    'F#': false,
-    'G': false,
-    'C': false,
-    'A': false,
-};
+/* Аккорды - действие (могут быть не все задействованы)
+    0/map/карта:
+        'D': 'up',
+        'F': 'left',
+        'C': 'right',
+        'F#': 'down',
+        'F#': 'enter',
+    1/battle/бой, 3/menu/меню:
+        'D': 'up',
+        'F': 'left',
+        'G': 'right',
+        'B': 'down',
+        'A': 'select', (item or act or else)
+    2/cutscene/катсцена:
+        'C': skip 1 dialog,
+        'F': skip whole scene,
+        'G': next dialog
+*/
+// var noteAct = {
+//     'D': 'up',
+//     'F': 'left',
+//     'G': 'right',
+//     'B': 'down',
+//     'F#': 'select',
+//     'C': 'back',
+//     'A': 'undo',
+// };
 
 var smallBuffer = [];
 var keyboardDown = false;
-var canvas = document.getElementById('game_canvas');
-var context = canvas.getContext('2d');
+const MIN_DURATION = 15;
 
-// сделать очищение по времени (каждую секунду ?)
 function isNotePlaying(currentNote) {
     smallBuffer.push(currentNote);
     if (smallBuffer.length >= 2 && smallBuffer[0] == smallBuffer[1]) {
@@ -22,13 +39,13 @@ function isNotePlaying(currentNote) {
             // console.log(`your note is ${currentNote}, and buffer is`, smallBuffer);
             keyboardDown = true;
         }
-    } else if (smallBuffer.length == 1 && duration >= 20) {
+    } else if (smallBuffer.length == 1 && duration >= MIN_DURATION) {
         if (!keyboardDown) {
             // console.log(`u r in else if, your note is ${currentNote}, and buffer is`, smallBuffer);
             keyboardDown = false;
         }
-        console.log(playingNote, 'else if', smallBuffer - 1);
-    } else if (duration >= 20) {
+        // console.log(noteAct, 'else if', smallBuffer - 1);
+    } else if (duration >= MIN_DURATION) {
         keyboardDown = false;
         // console.log('back to false', playingNote);
         smallBuffer.splice(0, smallBuffer.length - 1);
@@ -49,3 +66,15 @@ document.addEventListener('keyup', (e) => {
         keyboardDown = false;
     }
 }); старый тест на реакцию 1 нажатие - 1 действие, даже если зажали*/
+
+
+var canvas = document.getElementById('game_canvas');
+var context = canvas.getContext('2d');
+
+var gamemode = 'menu'; // 0/map - бродилка по карте, 1/battle - бой с врагами, 2/cutscene - катсцена, 3/menu - менюшки
+
+function startGame() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    player.move();
+    player.draw();
+}

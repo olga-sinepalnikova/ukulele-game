@@ -38,10 +38,10 @@ function error() {
 
 function getUserMedia(dictionary, callback) {
 	try {
-		navigator.getUserMedia =
-			navigator.getUserMedia ||
+		navigator.getUserMedia = (navigator.getUserMedia ||
 			navigator.webkitGetUserMedia ||
-			navigator.mozGetUserMedia;
+			navigator.mozGetUserMedia ||
+			navigator.msGetUserMedia);
 		navigator.getUserMedia(dictionary, callback, error);
 	} catch (e) {
 		alert('getUserMedia threw exception :' + e);
@@ -188,7 +188,7 @@ function updatePitch(time) {
 		} else {
 			duration = 0;
 		}
-		console.log(duration, noteElem.innerHTML);
+		// console.log(duration, noteElem.innerHTML);
 
 		var detune = centsOffFromPitch(pitch, note);
 		if (detune == 0) {
@@ -208,8 +208,5 @@ function updatePitch(time) {
 		window.requestAnimationFrame = window.webkitRequestAnimationFrame;
 	rafID = window.requestAnimationFrame(updatePitch);
 
-	context.clearRect(0, 0, canvas.width, canvas.height);
-	player.move();
-	player.draw();
-
+	startGame();
 }
