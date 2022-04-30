@@ -55,10 +55,32 @@ class Player {
                 this.x = canvas.width - this.width;
             }
         }
+        if (this.x < 0) {
+            this.x = 0;
+        } else if (this.x > canvas.width) {
+            this.x = canvas.width - this.width;
+        }
+        if (this.y < 0) {
+            this.y = 0;
+        } else if (this.y > canvas.height) {
+            this.y = canvas.height - this.height;
+        }
     }
 
-    battle() {
+    attack() {
+        // regular || strong
+    }
 
+    block() {
+
+    }
+
+    healing() {
+
+    }
+
+    magic() {
+        // fire || ice || plants
     }
 
     levelUp() {

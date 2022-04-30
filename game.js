@@ -4,7 +4,7 @@
         'F': 'left',
         'C': 'right',
         'F#': 'down',
-        'F#': 'enter',
+        'B': 'enter',
     1/battle/бой, 3/menu/меню:
         'D': 'up',
         'F': 'left',
