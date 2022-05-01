@@ -30,6 +30,10 @@ var smallBuffer = [];
 var keyboardDown = false;
 const MIN_DURATION = 15;
 
+function durationCheck() {
+    return duration >= MIN_DURATION;
+}
+
 function isNotePlaying(currentNote) {
     smallBuffer.push(currentNote);
     if (smallBuffer.length >= 2 && smallBuffer[0] == smallBuffer[1]) {
@@ -39,13 +43,13 @@ function isNotePlaying(currentNote) {
             // console.log(`your note is ${currentNote}, and buffer is`, smallBuffer);
             keyboardDown = true;
         }
-    } else if (smallBuffer.length == 1 && duration >= MIN_DURATION) {
+    } else if (smallBuffer.length == 1 && durationCheck()) {
         if (!keyboardDown) {
             // console.log(`u r in else if, your note is ${currentNote}, and buffer is`, smallBuffer);
             keyboardDown = false;
         }
         // console.log(noteAct, 'else if', smallBuffer - 1);
-    } else if (duration >= MIN_DURATION) {
+    } else if (durationCheck()) {
         keyboardDown = false;
         // console.log('back to false', playingNote);
         smallBuffer.splice(0, smallBuffer.length - 1);
@@ -74,7 +78,15 @@ var context = canvas.getContext('2d');
 var gamemode = 'menu'; // 0/map - бродилка по карте, 1/battle - бой с врагами, 2/cutscene - катсцена, 3/menu - менюшки
 
 function startGame() {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    player.move();
-    player.draw();
+    if (player.currnetHealth > 0) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        player.move();
+        player.draw();
+        if (!keyboardDown && noteElem.innerText == 'A' && durationCheck()) {
+            console.log('u`r in')
+            player.attack(enemy_one, 'hit');
+        } else if (!keyboardDown && noteElem.innerText == 'B' && durationCheck()) {
+            player.attack(enemy_one, 'strongHit');
+        }
+    }
 }

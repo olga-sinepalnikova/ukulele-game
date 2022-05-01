@@ -4,7 +4,9 @@ class Player {
         this.height = 40;
         this.x = canvas.width / 2;
         this.y = canvas.height / 2;
-        this.health = 100;
+        this.color = 'blue';
+        this.maxHealth = 100;
+        this.currnetHealth = 100;
         this.level = 1;
         this.damage = 1;
         this.exp = 0;
@@ -17,7 +19,7 @@ class Player {
         this.fightSkills = {
             hit: true,
             block: true,
-            strongHit: false,
+            strongHit: true, //изначально false
         };
         this.inventory = {
             // предмет: [кол-во, эффект (?)]   
@@ -25,12 +27,13 @@ class Player {
     }
 
     draw() {
-        context.fillStyle = 'red';
+        context.fillStyle = this.color;
         context.fillRect(this.x, this.y, this.width, this.height);
     }
 
     move() {
         if (!keyboardDown && duration >= MIN_DURATION) {
+            this.color = 'blue';
             if (0 <= (this.y - this.height) && noteElem.innerText == 'D') {
                 this.y -= this.height;
             } else if (0 > (this.y - this.height)) {
@@ -67,40 +70,87 @@ class Player {
         }
     }
 
-    attack() {
+    attack(enemy, type) {
+        // type - hit, strongHit
+        // enemy is object of class Enemy
         // regular || strong
+        switch (type) {
+            case 'hit':
+                if (this.fightSkills.hit) {
+                    enemy.health -= this.damage;
+                    this.color = 'lightblue';
+                    console.log(this.color);
+                    context.fillRect(this.x, this.y, this.width, this.height);
+                }
+                break;
+
+            case 'strongHit':
+                if (this.fightSkills.strongHit) {
+                    enemy.health -= this.damage * 1.5;
+                    this.color = '#3333ff';
+                    console.log(this.color);
+                    context.fillRect(this.x, this.y, this.width, this.height);
+                }
+                break;
+        }
+        console.log(enemy.health);
     }
 
     block() {
-
+        // шанс 1 к (уровень злодея * здоровье игрока) к защите 50-100%
     }
 
     healing() {
-
+        if (this.currnetHealth + this.maxHealth / 2 < this.maxHealth) {
+            this.currnetHealth += this.maxHealth / 2;
+        } else {
+            this.currnetHealth = this.maxHealth;
+        }
     }
 
-    magic() {
+    magic(enemy, type) {
         // fire || ice || plants
+        switch (type) {
+            case 'fire':
+                if (this.magicSkills.fireball) {
+                    // animation + sprite
+                    enemy.health -= 20 * (Math.random() * (3 - 0.5) + 0.5)
+                }
+        }
     }
 
     levelUp() {
         if (this.level <= 10) {
-            this.health += Math.ceil(this.level * 25);
+            this.maxHealth += Math.ceil(this.level * 25);
             this.damage += Math.ceil(this.level * 5)
         } else if (10 > this.level <= 50) {
-            this.health += Math.ceil(this.level * 12.5);
+            this.maxHealth += Math.ceil(this.level * 12.5);
             this.damage += Math.ceil(this.level * 3);
         } else {
-            this.health += Math.ceil(this.level * 6.25);
+            this.maxHealth += Math.ceil(this.level * 6.25);
             this.damage += Math.ceil(this.level * 0.5);
         }
+        this.currnetHealth = this.maxHealth;
         this.level++;
+    }
+
+    takeDamage(dmg) {
+        this.currnetHealth -= dmg;
     }
 };
 
 var player = new Player();
+/*  healing test
+console.log(player.currnetHealth);
+player.takeDamage(80);
+console.log(player.currnetHealth);
+player.healing();
+console.log(player.currnetHealth);
+player.healing();
+console.log(player.currnetHealth);
 
-// for (let i = 1; i <= 100; i++) {
-//     player.levelUp();
-//     console.log(player.level, player.health, player.damage);
-// }
+stats test
+for (let i = 1; i <= 100; i++) {
+    player.levelUp();
+    console.log(player.level, player.health, player.damage);
+} */
