@@ -23,6 +23,7 @@
 
 		div.vague {
 			color: lightgrey;
+			width: 60%;
 		}
 
 		#note {
@@ -63,6 +64,7 @@
 
 		#game_canvas {
 			border: 2px solid black;
+			float: right;
 		}
 	</style>
 </head>
@@ -71,9 +73,19 @@
 	<script src="pitchdetect.js"></script>
 
 	<p>
-		<button onclick="toggleLiveInput()">use live input</button>
-		<!--<button onclick="updatePitch(0);">sample</button>-->
+	<h1>
+		Вверх: D <br>
+		Вправо: G <br>
+		Влево: F <br>
+		Вниз: F# <br> E - войти в бой
+		A - огонь, B - лёд, C - растения, D - удар, E - сильный удар, F - лечение, G - блок <br>
+	</h1>
+	<h1 id="enemy_hp"></h1>
+	<button onclick="toggleLiveInput()">use live input</button>
+	<!--<button onclick="updatePitch(0);">sample</button>-->
 	</p>
+	<canvas id="game_canvas" width="500" height="256"></canvas>
+
 
 	<div id="detector" class="vague">
 		<div class="pitch"><span id="pitch">--</span>Hz</div>
@@ -82,11 +94,10 @@
 		<div id="detune"><span id="detune_amt">--</span><span id="flat">cents &#9837;</span><span id="sharp">cents
 				&#9839;</span></div>
 	</div>
+	<br>
+	<!-- just used for debugging
+	<canvas id="waveform" width="512" height="256"></canvas> -->
 
-	just used for debugging
-	<canvas id="waveform" width="512" height="256"></canvas>
-
-	<canvas id="game_canvas" width="512" height="256"></canvas>
 	<script src="game.js"></script>
 	<script src="player_class.js"></script>
 	<script src="enemy_class.js"></script>

@@ -23,10 +23,8 @@ class Enemy {
         context.fillStyle = 'red';
         context.fillRect(this.x, this.y, this.width, this.height);
     }
-
-    takeDamage(damage) {
-
-    }
 }
 
-var enemy_one = new Enemy(100);
+var enemy_one = new Enemy(10);
+var enemy_hp = document.getElementById('enemy_hp');
+enemy_hp.innerHTML = enemy_one.health;

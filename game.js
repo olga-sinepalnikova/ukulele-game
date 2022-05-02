@@ -75,18 +75,78 @@ document.addEventListener('keyup', (e) => {
 var canvas = document.getElementById('game_canvas');
 var context = canvas.getContext('2d');
 
-var gamemode = 'menu'; // 0/map - бродилка по карте, 1/battle - бой с врагами, 2/cutscene - катсцена, 3/menu - менюшки
+var gamemode = 'map'; // 0/map - бродилка по карте, 1/battle - бой с врагами, 2/cutscene - катсцена, 3/menu - менюшки
 
 function startGame() {
-    if (player.currnetHealth > 0) {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        player.move();
-        player.draw();
-        if (!keyboardDown && noteElem.innerText == 'A' && durationCheck()) {
-            console.log('u`r in')
-            player.attack(enemy_one, 'hit');
-        } else if (!keyboardDown && noteElem.innerText == 'B' && durationCheck()) {
-            player.attack(enemy_one, 'strongHit');
+    switch (gamemode) {
+        case 'map':
+            mapMode();
+            break;
+        case 'battle':
+            battleMode();
+            break;
+        case 'cutscene':
+            cutsceneMode();
+            break;
+        case 'menu':
+            menuMode();
+            break;
+    }
+}
+
+function mapMode() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    player.move();
+    player.draw();
+    if (!keyboardDown && durationCheck()) {
+        if (noteElem.innerText == 'E') {
+            gamemode = 'battle';
         }
     }
+}
+
+function battleMode() {
+    if (player.currentHealth > 0 && enemy_one.health > 0) {
+        if (!keyboardDown && durationCheck()) {
+            enemy_hp.innerHTML = enemy_one.health;
+            console.log(enemy_one.health);
+            console.log(player.currentHealth);
+            // A - огонь, B - лёд, C - растения, D - удар, E - сильный удар, F - лечение, G - блок
+            switch (noteElem.innerText) {
+                case 'A':
+                    player.magic(enemy_one, 'fire');
+                    break;
+
+                case 'B':
+                    player.magic(enemy_one, 'ice');
+                    break;
+
+                case 'C':
+                    player.magic(enemy_one, 'plants');
+                    break;
+                case 'D':
+                    player.attack(enemy_one, 'hit');
+                    break;
+                case 'E':
+                    player.attack(enemy_one, 'strongHit');
+                    break;
+                case 'F':
+                    player.healing();
+                    break;
+                case 'G':
+                    player.block();
+                    break;
+            }
+        }
+    } else {
+        gamemode = 'map';
+    }
+}
+
+function cutsceneMode() {
+    // запускать гифку 
+}
+
+function menuMode() {
+
 }

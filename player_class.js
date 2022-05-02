@@ -6,15 +6,15 @@ class Player {
         this.y = canvas.height / 2;
         this.color = 'blue';
         this.maxHealth = 100;
-        this.currnetHealth = 100;
+        this.currentHealth = 100;
         this.level = 1;
         this.damage = 1;
         this.exp = 0;
         this.magicSkills = {
-            fireball: false,
-            iceball: false,
-            plants: false,
-            healing: false,
+            fireball: true, // false
+            iceball: true, // false
+            plants: true, // false
+            healing: true, // false
         };
         this.fightSkills = {
             hit: true,
@@ -52,7 +52,7 @@ class Player {
                 this.x = 0;
             }
 
-            if ((this.x + this.width) <= (canvas.width - this.width) && noteElem.innerText == 'C') {
+            if ((this.x + this.width) <= (canvas.width - this.width) && noteElem.innerText == 'G') {
                 this.x += this.width
             } else if ((this.x + this.width) > (canvas.width - this.width)) {
                 this.x = canvas.width - this.width;
@@ -93,7 +93,6 @@ class Player {
                 }
                 break;
         }
-        console.log(enemy.health);
     }
 
     block() {
@@ -101,21 +100,36 @@ class Player {
     }
 
     healing() {
-        if (this.currnetHealth + this.maxHealth / 2 < this.maxHealth) {
-            this.currnetHealth += this.maxHealth / 2;
+        if (this.currentHealth + this.maxHealth / 2 < this.maxHealth) {
+            this.currentHealth += this.maxHealth / 2;
         } else {
-            this.currnetHealth = this.maxHealth;
+            this.currentHealth = this.maxHealth;
         }
     }
 
     magic(enemy, type) {
         // fire || ice || plants
+        // дать врагам классы и учитывать при использовании магии?
+        console.log(type);
         switch (type) {
             case 'fire':
                 if (this.magicSkills.fireball) {
                     // animation + sprite
-                    enemy.health -= 20 * (Math.random() * (3 - 0.5) + 0.5)
+                    enemy.health -= Math.ceil(20 * (Math.random() * (3 - 0.5) + 0.5));
                 }
+                break;
+            case 'ice':
+                if (this.magicSkills.iceball) {
+                    // animation + sprite
+                    enemy.health -= Math.ceil(20 * (Math.random() * (4 - 1) + 1));
+                }
+                break;
+            case 'plants':
+                if (this.magicSkills.plants) {
+                    // animation + sprite
+                    enemy.health -= Math.ceil(20 * (Math.random() * (2 - 0.5) + 0.5));
+                }
+                break;
         }
     }
 
@@ -130,13 +144,10 @@ class Player {
             this.maxHealth += Math.ceil(this.level * 6.25);
             this.damage += Math.ceil(this.level * 0.5);
         }
-        this.currnetHealth = this.maxHealth;
+        this.currentHealth = this.maxHealth;
         this.level++;
     }
 
-    takeDamage(dmg) {
-        this.currnetHealth -= dmg;
-    }
 };
 
 var player = new Player();
