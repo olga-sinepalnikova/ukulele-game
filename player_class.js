@@ -95,7 +95,11 @@ class Player {
         }
     }
 
-    block() {
+    block(dmg) {
+        var chance = Math.random();
+        if (chance < 0.7) {
+            this.takeDamage(dmg - (Math.random() * 0.5 + 0.5));
+        }
         // шанс 1 к (уровень злодея * здоровье игрока) к защите 50-100%
     }
 
@@ -133,6 +137,10 @@ class Player {
         }
     }
 
+    takeDamage(dmg) {
+        this.currentHealth -= dmg;
+    }
+
     levelUp() {
         if (this.level <= 10) {
             this.maxHealth += Math.ceil(this.level * 25);
@@ -151,6 +159,8 @@ class Player {
 };
 
 var player = new Player();
+startGame();
+
 /*  healing test
 console.log(player.currnetHealth);
 player.takeDamage(80);

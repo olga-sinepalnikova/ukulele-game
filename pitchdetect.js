@@ -208,5 +208,5 @@ function updatePitch(time) {
 		window.requestAnimationFrame = window.webkitRequestAnimationFrame;
 	rafID = window.requestAnimationFrame(updatePitch);
 
-	startGame();
+	// startGame();
 }

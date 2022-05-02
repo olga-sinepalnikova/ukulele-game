@@ -92,6 +92,8 @@ function startGame() {
             menuMode();
             break;
     }
+
+    window.requestAnimationFrame(startGame);
 }
 
 function mapMode() {
@@ -106,9 +108,9 @@ function mapMode() {
 }
 
 function battleMode() {
+    enemy_hp.innerHTML = enemy_one.health;
     if (player.currentHealth > 0 && enemy_one.health > 0) {
         if (!keyboardDown && durationCheck()) {
-            enemy_hp.innerHTML = enemy_one.health;
             console.log(enemy_one.health);
             console.log(player.currentHealth);
             // A - огонь, B - лёд, C - растения, D - удар, E - сильный удар, F - лечение, G - блок
