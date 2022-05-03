@@ -30,8 +30,10 @@ var smallBuffer = [];
 var keyboardDown = false;
 const MIN_DURATION = 15;
 
-function durationCheck() {
-    return duration >= MIN_DURATION;
+var gameText = document.getElementById('game_text');
+
+function ableToActCheck() {
+    return !keyboardDown && duration >= MIN_DURATION;
 }
 
 function isNotePlaying(currentNote) {
@@ -43,13 +45,13 @@ function isNotePlaying(currentNote) {
             // console.log(`your note is ${currentNote}, and buffer is`, smallBuffer);
             keyboardDown = true;
         }
-    } else if (smallBuffer.length == 1 && durationCheck()) {
+    } else if (smallBuffer.length == 1 && duration >= MIN_DURATION) {
         if (!keyboardDown) {
             // console.log(`u r in else if, your note is ${currentNote}, and buffer is`, smallBuffer);
             keyboardDown = false;
         }
         // console.log(noteAct, 'else if', smallBuffer - 1);
-    } else if (durationCheck()) {
+    } else if (duration >= MIN_DURATION) {
         keyboardDown = false;
         // console.log('back to false', playingNote);
         smallBuffer.splice(0, smallBuffer.length - 1);
@@ -57,27 +59,16 @@ function isNotePlaying(currentNote) {
     // console.log(keyboardDown);
 }
 
-/* document.addEventListener('keydown', (e) => {
-    if (!keyboardDown) {
-        console.log('pressed button');
-        keyboardDown = true;
-    }
-    console.log(e.key);
-});
-document.addEventListener('keyup', (e) => {
-    if (keyboardDown) {
-        console.log('lol, unpressed');
-        keyboardDown = false;
-    }
-}); старый тест на реакцию 1 нажатие - 1 действие, даже если зажали*/
-
-
 var canvas = document.getElementById('game_canvas');
 var context = canvas.getContext('2d');
 
 var gamemode = 'map'; // 0/map - бродилка по карте, 1/battle - бой с врагами, 2/cutscene - катсцена, 3/menu - менюшки
+var gamemodeText = document.getElementById('gamemode');
 
 function startGame() {
+    enemy_hp.innerHTML = `Враг - ${dummy.health} || Игрок - ${player.currentHealth}`;
+
+    gamemodeText.innerText = gamemode;
     switch (gamemode) {
         case 'map':
             mapMode();
@@ -93,55 +84,70 @@ function startGame() {
             break;
     }
 
+    if (ableToActCheck()) {
+        if (noteElem.innerText == 'A#' && gamemode != 'battle') gamemode = 'menu';
+    }
+
     window.requestAnimationFrame(startGame);
 }
 
 function mapMode() {
+    gameText.innerText = `Вы на карте! Чтобы войти в меню - сыграйте А#, чтобы войти в бой - Е
+    для передвижения используйте D - вверх
+                          F - влево,
+                          F# - вниз,
+                          G - вправо`;
     context.clearRect(0, 0, canvas.width, canvas.height);
     player.move();
     player.draw();
-    if (!keyboardDown && durationCheck()) {
-        if (noteElem.innerText == 'E') {
-            gamemode = 'battle';
-        }
+    if (ableToActCheck() && noteElem.innerText == 'E') {
+        gamemode = 'battle';
+
     }
 }
 
+var step = true;  // true - player, false - enemies
 function battleMode() {
-    enemy_hp.innerHTML = enemy_one.health;
-    if (player.currentHealth > 0 && enemy_one.health > 0) {
-        if (!keyboardDown && durationCheck()) {
-            console.log(enemy_one.health);
-            console.log(player.currentHealth);
+    dummy.update();
+    gameText.innerText = `Вы в бою! Магические умения: А - огонь, В - лёд, С - растения, F - лечение
+    Боевые умения: D - удар, E - сильный удар, G - блок
+    Чтобы выйти из боя - убейте врага`;
+    if (player.currentHealth > 0 && dummy.health > 0) {
+        if (ableToActCheck() && step) {
+            console.log(step);
+            step = false;
             // A - огонь, B - лёд, C - растения, D - удар, E - сильный удар, F - лечение, G - блок
             switch (noteElem.innerText) {
                 case 'A':
-                    player.magic(enemy_one, 'fire');
+                    player.magic(dummy, 'fire');
                     break;
-
                 case 'B':
-                    player.magic(enemy_one, 'ice');
+                    player.magic(dummy, 'ice');
                     break;
-
                 case 'C':
-                    player.magic(enemy_one, 'plants');
+                    player.magic(dummy, 'plants');
                     break;
                 case 'D':
-                    player.attack(enemy_one, 'hit');
+                    player.attack(dummy, 'hit');
                     break;
                 case 'E':
-                    player.attack(enemy_one, 'strongHit');
+                    player.attack(dummy, 'strongHit');
                     break;
                 case 'F':
                     player.healing();
                     break;
                 case 'G':
-                    player.block();
+                    player.block(1);
                     break;
             }
+        } else if (!step) {
+            console.log('enemy attack');
+            dummy.attack();
+            step = true;
         }
     } else {
         gamemode = 'map';
+        step = true;
     }
 }
 
@@ -150,5 +156,9 @@ function cutsceneMode() {
 }
 
 function menuMode() {
-
+    // тут должы быть настройки (и статы игрока ?)
+    gameText.innerText = `Вы в меню! Тут пока ничего нет, чтобы выйти сыграйте В`;
+    if (ableToActCheck() && noteElem.innerText == 'B') {
+        gamemode = 'map';
+    }
 }

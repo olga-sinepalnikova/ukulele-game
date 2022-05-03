@@ -27,13 +27,12 @@ class Player {
     }
 
     draw() {
-        context.fillStyle = this.color;
+        context.fillStyle = 'blue';
         context.fillRect(this.x, this.y, this.width, this.height);
     }
 
     move() {
         if (!keyboardDown && duration >= MIN_DURATION) {
-            this.color = 'blue';
             if (0 <= (this.y - this.height) && noteElem.innerText == 'D') {
                 this.y -= this.height;
             } else if (0 > (this.y - this.height)) {
@@ -78,27 +77,23 @@ class Player {
             case 'hit':
                 if (this.fightSkills.hit) {
                     enemy.health -= this.damage;
-                    this.color = 'lightblue';
-                    console.log(this.color);
-                    context.fillRect(this.x, this.y, this.width, this.height);
                 }
                 break;
 
             case 'strongHit':
                 if (this.fightSkills.strongHit) {
                     enemy.health -= this.damage * 1.5;
-                    this.color = '#3333ff';
-                    console.log(this.color);
-                    context.fillRect(this.x, this.y, this.width, this.height);
                 }
                 break;
         }
     }
 
     block(dmg) {
-        var chance = Math.random();
+        let chance = Math.random();
         if (chance < 0.7) {
             this.takeDamage(dmg - (Math.random() * 0.5 + 0.5));
+        } else {
+            this.takeDamage(dmg);
         }
         // шанс 1 к (уровень злодея * здоровье игрока) к защите 50-100%
     }
@@ -159,7 +154,7 @@ class Player {
 };
 
 var player = new Player();
-startGame();
+// startGame();
 
 /*  healing test
 console.log(player.currnetHealth);

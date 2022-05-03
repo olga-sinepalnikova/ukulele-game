@@ -60,6 +60,7 @@ function gotStream(stream) {
 }
 
 function toggleLiveInput() {
+	startGame();
 	audioContext = new AudioContext();
 	getUserMedia(
 		{
@@ -207,6 +208,4 @@ function updatePitch(time) {
 	if (!window.requestAnimationFrame)
 		window.requestAnimationFrame = window.webkitRequestAnimationFrame;
 	rafID = window.requestAnimationFrame(updatePitch);
-
-	// startGame();
 }
