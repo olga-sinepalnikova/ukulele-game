@@ -80,12 +80,10 @@
 		Вниз: F# <br> E - войти в бой
 		A - огонь, B - лёд, C - растения, D - удар, E - сильный удар, F - лечение, G - блок <br>
 		</h1> -->
-	<p id="game_text"></p>
 
-	<p id="gamemode"></p>
-	<h1 id="enemy_hp"></h1>
-	<button onclick="toggleLiveInput()">Начать игру</button>
-	<!--<button onclick="updatePitch(0);">sample</button>-->
+		<button onclick="toggleLiveInput()">Начать игру</button>
+		<button onclick="cheatLevelUp()">Увеличить уровень до след умения</button>
+		<!--<button onclick="updatePitch(0);">sample</button>-->
 	</p>
 	<canvas id="game_canvas" width="500" height="256"></canvas>
 
@@ -98,6 +96,10 @@
 				&#9839;</span></div>
 	</div>
 	<br>
+	<p id="game_text"></p>
+
+	<p id="gamemode"></p>
+	<h1 id="enemy_hp"></h1>
 	<!-- just used for debugging
 	<canvas id="waveform" width="512" height="256"></canvas> -->
 
