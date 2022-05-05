@@ -66,7 +66,7 @@ var gamemode = 'map'; // 0/map - бродилка по карте, 1/battle - б
 var gamemodeText = document.getElementById('gamemode');
 
 function startGame() {
-    enemy_hp.innerHTML = `Враг - ${dummy.health} || Игрок - ${player.currentHealth}, lvl - ${player.level}, exp - ${player.xp}`;
+    enemy_hp.innerHTML = `Враг - ??? || Игрок - ${player.currentHealth}, lvl - ${player.level}, exp - ${player.xp}`;
 
     gamemodeText.innerText = gamemode;
     switch (gamemode) {
@@ -123,8 +123,9 @@ function chooseEnemy() {
                 currentEnemy = enemies.length;
             };
             break;
+        case 'A#':
+            return enemies[currentEnemy];
     };
-    return enemies[currentEnemy];
 }
 var step = true;  // true - player, false - enemies
 function battleMode() {
