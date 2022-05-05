@@ -74,6 +74,7 @@ function startGame() {
             mapMode();
             break;
         case 'battle':
+            enemies = createEnemiesArray();
             battleMode();
             break;
         case 'cutscene':
@@ -101,7 +102,7 @@ function mapMode() {
     player.move();
     player.draw();
     if (ableToActCheck() && noteElem.innerText == 'E') {
-        var enemies = [new Enemy(2, 20), new Enemy(4, 60), new Enemy(10, 100)];
+
         gamemode = 'battle';
     }
 }
@@ -130,8 +131,8 @@ function chooseEnemy() {
 var step = true;  // true - player, false - enemies
 function battleMode() {
     enemies.forEach(enemy => {
-                enemy.update();
-            });
+        enemy.update();
+    });
     gameText.innerText = `Вы в бою! Магические умения: А - огонь ${player.magicSkills.fireball},
     В - лёд ${player.magicSkills.iceball},
     С - растения ${player.magicSkills.plants},
@@ -142,9 +143,10 @@ function battleMode() {
     G - блок
     Чтобы выйти из боя - убейте врага`;
     if (player.currentHealth > 0 && enemies.length > 0) {
-        let attackedEnemy = chooseEnemy();
         if (ableToActCheck() && step) {
             console.log(step);
+            let attackedEnemy = chooseEnemy();
+            console.log(attackedEnemy);
 
             // A - огонь, B - лёд, C - растения, D - удар, E - сильный удар, F - лечение, G - блок
             switch (noteElem.innerText) {
@@ -173,7 +175,7 @@ function battleMode() {
                     step = false;
                     break;
                 case 'G':
-                    player.block(attackedEnemy.attack);
+                    player.block(attackedEnemy.attack());
                     step = true; // так как в блоке в любом случае принимается урон
                     break;
             }
