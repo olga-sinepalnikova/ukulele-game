@@ -101,8 +101,8 @@ function mapMode() {
     player.move();
     player.draw();
     if (ableToActCheck() && noteElem.innerText == 'E') {
-        gamemode = 'battle';
         var enemies = [new Enemy(2, 20), new Enemy(4, 60), new Enemy(10, 100)];
+        gamemode = 'battle';
     }
 }
 
