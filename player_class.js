@@ -9,17 +9,18 @@ class Player {
         this.currentHealth = 100;
         this.level = 1;
         this.damage = 1;
-        this.exp = 0;
+        this.xp = 0;
+        this.maxXp = 100;
         this.magicSkills = {
-            fireball: true, // false
-            iceball: true, // false
-            plants: true, // false
-            healing: true, // false
+            fireball: false, // false
+            iceball: false, // false
+            plants: false, // false
+            healing: false, // false
         };
         this.fightSkills = {
             hit: true,
             block: true,
-            strongHit: true, //изначально false
+            strongHit: false, //изначально false
         };
         this.inventory = {
             // предмет: [кол-во, эффект (?)]   
@@ -90,8 +91,10 @@ class Player {
 
     block(dmg) {
         let chance = Math.random();
-        if (chance < 0.7) {
-            this.takeDamage(dmg - (Math.random() * 0.5 + 0.5));
+        if (chance > 0.7) { // настроить шанс от уровня
+            dmg = Math.floor(dmg - (Math.random() * 0.5 + 0.5));
+            console.log(dmg);
+            this.takeDamage(dmg);
         } else {
             this.takeDamage(dmg);
         }
@@ -114,7 +117,7 @@ class Player {
             case 'fire':
                 if (this.magicSkills.fireball) {
                     // animation + sprite
-                    enemy.health -= Math.ceil(20 * (Math.random() * (3 - 0.5) + 0.5));
+                    enemy.health -= Math.ceil(10 * (Math.random() * (3 - 0.5) + 0.5));
                 }
                 break;
             case 'ice':
@@ -126,7 +129,7 @@ class Player {
             case 'plants':
                 if (this.magicSkills.plants) {
                     // animation + sprite
-                    enemy.health -= Math.ceil(20 * (Math.random() * (2 - 0.5) + 0.5));
+                    enemy.health -= Math.ceil(30 * (Math.random() * (2 - 0.5) + 0.5));
                 }
                 break;
         }
@@ -149,6 +152,36 @@ class Player {
         }
         this.currentHealth = this.maxHealth;
         this.level++;
+
+        switch (this.level) {
+            case 5:
+                this.fightSkills.strongHit = true;
+                break;
+            case 15:
+                this.magicSkills.healing = true;
+                break;
+            case 20:
+                this.magicSkills.fireball = true;
+                break;
+            case 30:
+                this.magicSkills.iceball = true;
+                break;
+            case 55:
+                this.magicSkills.plants = true;
+                break;
+        }
+    }
+
+    xpUp() {
+        if (this.xp >= this.maxXp) {
+            this.xp -= this.maxXp;
+            if (this.level < 10) {
+                this.maxXp = this.level * 10 + Math.floor(Math.random() * 25 + 5);
+            } else {
+                this.maxXp = this.level * 5 + Math.floor(Math.random() * 25 + 5);
+            }
+            this.levelUp();
+        }
     }
 
 };
