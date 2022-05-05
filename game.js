@@ -128,7 +128,9 @@ function chooseEnemy() {
 }
 var step = true;  // true - player, false - enemies
 function battleMode() {
-    dummy.update();
+    enemies.forEach(enemy => {
+                enemy.update();
+            });
     gameText.innerText = `Вы в бою! Магические умения: А - огонь ${player.magicSkills.fireball},
     В - лёд ${player.magicSkills.iceball},
     С - растения ${player.magicSkills.plants},
