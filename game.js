@@ -62,7 +62,7 @@ function isNotePlaying(currentNote) {
 var canvas = document.getElementById('game_canvas');
 var context = canvas.getContext('2d');
 
-var gamemode = 'map'; // 0/map - бродилка по карте, 1/battle - бой с врагами, 2/cutscene - катсцена, 3/menu - менюшки
+var gamemode = 'map'; // 0/map - бродилка по карте, 1/battle - бой с врагами, 2/cutscene - катсцена, 3/menu - менюшки, 4/chooseEnemy - выбор врага
 var gamemodeText = document.getElementById('gamemode');
 
 function startGame() {
@@ -73,8 +73,11 @@ function startGame() {
         case 'map':
             mapMode();
             break;
-        case 'battle':
+        case 'chooseEnemy':
             enemies = createEnemiesArray();
+            chooseEnemy();
+            break;
+        case 'battle':
             battleMode();
             break;
         case 'cutscene':
@@ -102,32 +105,43 @@ function mapMode() {
     player.move();
     player.draw();
     if (ableToActCheck() && noteElem.innerText == 'E') {
-
-        gamemode = 'battle';
+        gamemode = 'chooseEnemy';
     }
 }
 
+var currentEnemy = 0;
 function chooseEnemy() {
-    var currentEnemy = 0;
-    switch (noteElem.innerText) {
-        case 'A':
-            if (currentEnemy++ <= enemies.length) {
-                currentEnemy++;
-            } else {
-                currentEnemy = 0;
-            };
-            break;
-        case 'E':
-            if (currentEnemy-- >= 0) {
-                currentEnemy--;
-            } else {
-                currentEnemy = enemies.length;
-            };
-            break;
-        case 'A#':
-            return enemies[currentEnemy];
-    };
+    enemies.forEach(enemy => {
+        enemy.update();
+    });
+    context.fillStyle = 'green';
+    if (ableToActCheck()) {
+        switch (noteElem.innerText) {
+            case 'A':
+                if (currentEnemy + 1 < enemies.length) {
+                    currentEnemy += 1;
+                } else {
+                    currentEnemy = 0;
+                };
+                break;
+            case 'E':
+                if (currentEnemy - 1 >= 0) {
+                    currentEnemy -= 1;
+                } else {
+                    currentEnemy = enemies.length - 1;
+                };
+                break;
+            case 'A#':
+                console.log(enemies[currentEnemy]);
+                gamemode = 'battle';
+                attackedEnemy = enemies[currentEnemy];
+                break;
+        };
+    }
+    // console.log(currentEnemy);
 }
+
+var attackedEnemy = undefined;
 var step = true;  // true - player, false - enemies
 function battleMode() {
     enemies.forEach(enemy => {
@@ -145,8 +159,6 @@ function battleMode() {
     if (player.currentHealth > 0 && enemies.length > 0) {
         if (ableToActCheck() && step) {
             console.log(step);
-            let attackedEnemy = chooseEnemy();
-            console.log(attackedEnemy);
 
             // A - огонь, B - лёд, C - растения, D - удар, E - сильный удар, F - лечение, G - блок
             switch (noteElem.innerText) {
@@ -179,7 +191,9 @@ function battleMode() {
                     step = true; // так как в блоке в любом случае принимается урон
                     break;
             }
-        } else if (!step && !ableToActCheck()) {
+
+
+        } else if (!step && !ableToActCheck() && attackedEnemy) {
             console.log('enemy attack');
             enemies.forEach(enemy => {
                 if (enemy.health > 0) {
@@ -188,7 +202,7 @@ function battleMode() {
                     enemies.splice(enemy)
                 }
             });
-
+            gamemode = 'chooseEnemy';
             step = true;
         }
     } else {
