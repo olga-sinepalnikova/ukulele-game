@@ -39,7 +39,7 @@ class Enemy {
 
 // var dummy = new Enemy(5);
 function createEnemiesArray() {
-    return [new Enemy(2, 20), new Enemy(4, 60), new Enemy(10, 100)];
+    return [new Enemy(2, 20), new Enemy(4, 60), new Enemy(3, 100)];
 }
 var enemy_hp = document.getElementById('enemy_hp');
 enemy_hp.innerHTML = `Враг - ??? || Игрок - ${player.currentHealth}, lvl - ${player.level}, exp - ${player.xp}`;

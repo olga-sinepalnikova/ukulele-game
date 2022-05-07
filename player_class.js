@@ -78,15 +78,16 @@ class Player {
             case 'hit':
                 if (this.fightSkills.hit) {
                     enemy.health -= this.damage;
+                    return false;
                 }
-                break;
 
             case 'strongHit':
                 if (this.fightSkills.strongHit) {
                     enemy.health -= this.damage * 1.5;
+                    return false;
                 }
-                break;
         }
+        return true
     }
 
     block(dmg) {
@@ -102,11 +103,15 @@ class Player {
     }
 
     healing() {
-        if (this.currentHealth + this.maxHealth / 2 < this.maxHealth) {
-            this.currentHealth += this.maxHealth / 2;
-        } else {
-            this.currentHealth = this.maxHealth;
+        if (this.magicSkills.healing) {
+            if (this.currentHealth + this.maxHealth / 2 < this.maxHealth) {
+                this.currentHealth += this.maxHealth / 2;
+            } else {
+                this.currentHealth = this.maxHealth;
+            }
+            return false;
         }
+        return true;
     }
 
     magic(enemy, type) {
@@ -118,21 +123,22 @@ class Player {
                 if (this.magicSkills.fireball) {
                     // animation + sprite
                     enemy.health -= Math.ceil(10 * (Math.random() * (3 - 0.5) + 0.5));
+                    return false;
                 }
-                break;
             case 'ice':
                 if (this.magicSkills.iceball) {
                     // animation + sprite
                     enemy.health -= Math.ceil(20 * (Math.random() * (4 - 1) + 1));
+                    return false;
                 }
-                break;
             case 'plants':
                 if (this.magicSkills.plants) {
                     // animation + sprite
                     enemy.health -= Math.ceil(30 * (Math.random() * (2 - 0.5) + 0.5));
+                    return false;
                 }
-                break;
         }
+        return true;
     }
 
     takeDamage(dmg) {
