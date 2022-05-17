@@ -34,25 +34,25 @@ class Player {
 
     move() {
         if (!keyboardDown && duration >= MIN_DURATION) {
-            if (0 <= (this.y - this.height) && noteElem.innerText == 'D') {
+            if (0 <= (this.y - this.height) && noteElem.innerText == actions.map.up) {
                 this.y -= this.height;
             } else if (0 > (this.y - this.height)) {
                 this.y = 0;
             }
 
-            if ((this.y + this.height) <= (canvas.height - this.height) && noteElem.innerText == 'F#') {
+            if ((this.y + this.height) <= (canvas.height - this.height) && noteElem.innerText == actions.map.down) {
                 this.y += this.height
             } else if ((this.y + this.height) > (canvas.height - this.height)) {
                 this.y = canvas.height - this.height;
             }
 
-            if (0 <= (this.x - this.width) && noteElem.innerText == 'F') {
+            if (0 <= (this.x - this.width) && noteElem.innerText == actions.map.left) {
                 this.x -= this.width;
             } else if (0 > (this.x - this.width)) {
                 this.x = 0;
             }
 
-            if ((this.x + this.width) <= (canvas.width - this.width) && noteElem.innerText == 'G') {
+            if ((this.x + this.width) <= (canvas.width - this.width) && noteElem.innerText == actions.map.right) {
                 this.x += this.width
             } else if ((this.x + this.width) > (canvas.width - this.width)) {
                 this.x = canvas.width - this.width;

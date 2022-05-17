@@ -30,7 +30,6 @@ var smallBuffer = [];
 var keyboardDown = false;
 const MIN_DURATION = 15;
 
-var gameText = document.getElementById('game_text');
 
 function ableToActCheck() {
     return !keyboardDown && duration >= MIN_DURATION;
@@ -105,7 +104,7 @@ function startGame() {
     }
 
     if (ableToActCheck()) {
-        if (noteElem.innerText == 'A#' && gamemode != 'battle') gamemode = 'menu';
+        if (noteElem.innerText == actions.map.enterMenu && gamemode != 'battle') gamemode = 'menu';
     }
 
     window.requestAnimationFrame(startGame);
@@ -120,7 +119,7 @@ function mapMode() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     player.move();
     player.draw();
-    if (ableToActCheck() && noteElem.innerText == 'E') {
+    if (ableToActCheck() && noteElem.innerText == actions.map.enterBattle) {
         gamemode = 'chooseEnemy';
     }
 }
@@ -139,22 +138,23 @@ function chooseEnemy() {
         enemy.update();
     });
     if (ableToActCheck()) {
+        let act = actions.chooseEnemy;
         switch (noteElem.innerText) {
-            case 'A':
+            case act.down:
                 if (currentEnemy + 1 < enemies.length) {
                     currentEnemy += 1;
                 } else {
                     currentEnemy = 0;
                 };
                 break;
-            case 'E':
+            case act.up:
                 if (currentEnemy - 1 >= 0) {
                     currentEnemy -= 1;
                 } else {
                     currentEnemy = enemies.length - 1;
                 };
                 break;
-            case 'A#':
+            case act.choose:
                 console.log(enemies[currentEnemy]);
                 gamemode = 'battle';
                 attackedEnemy = enemies[currentEnemy];
@@ -167,6 +167,7 @@ function chooseEnemy() {
 var attackedEnemy = undefined;
 var step = true;  // true - player, false - enemies
 function battleMode() {
+    let act = actions.battle;
     enemies.forEach(enemy => {
         enemy.update();
     });
@@ -185,31 +186,31 @@ function battleMode() {
 
             // A - огонь, B - лёд, C - растения, D - удар, E - сильный удар, F - лечение, G - блок
             switch (noteElem.innerText) {
-                case 'A':
+                case act.fire:
                     step = player.magic(attackedEnemy, 'fire');
                     // step = false;
                     break;
-                case 'B':
+                case act.fire:
                     step = player.magic(attackedEnemy, 'ice');
                     // step = false;
                     break;
-                case 'C':
+                case act.plants:
                     step = player.magic(attackedEnemy, 'plants');
                     // step = false;
                     break;
-                case 'D':
+                case act.hit:
                     step = player.attack(attackedEnemy, 'hit');
                     // step = false;
                     break;
-                case 'E':
+                case act.strongHit:
                     step = player.attack(attackedEnemy, 'strongHit');
                     // step = false;
                     break;
-                case 'F':
+                case act.healing:
                     step = player.healing();
                     // step = false;
                     break;
-                case 'G':
+                case act.block:
                     player.block(attackedEnemy.attack());
                     step = true; // так как в блоке в любом случае принимается урон
                     break;
@@ -241,9 +242,15 @@ function cutsceneMode() {
 
 function menuMode() {
     // тут должы быть настройки (и статы игрока ?)
-    gameText.innerText = `Вы в меню! Тут пока ничего нет, чтобы выйти сыграйте В`;
-    if (ableToActCheck() && noteElem.innerText == 'B') {
-        gamemode = 'map';
+    // gameText.innerText = `Чтобы выйти сыграйте В`;
+    if (ableToActCheck()) {
+        switch (noteElem.innerText) {
+            case actions.menu.exit:
+                gamemode = 'map';
+                break;
+            case 'A':
+                createUserSettings();
+        }
     }
 }
 
