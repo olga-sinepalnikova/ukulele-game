@@ -1,0 +1,4 @@
+function chooseEnemyTest() {
+    gamemode = 'chooseEnemy';
+
+}

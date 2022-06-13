@@ -68,13 +68,11 @@ var enemies = undefined;
 function startGame() {
     if (Array.isArray(enemies)) {
         if (enemies.length > 0) {
-
             enemy_hp.innerHTML = `Враг - ${enemies[currentEnemy].health} || Игрок - ${player.currentHealth}, lvl - ${player.level}, exp - ${player.xp}`;
         }
 
     } else {
         enemy_hp.innerHTML = `Враг - ??? || Игрок - ${player.currentHealth}, lvl - ${player.level}, exp - ${player.xp}`;
-
     }
 
     gamemodeText.innerText = gamemode;
@@ -85,11 +83,7 @@ function startGame() {
         case 'chooseEnemy':
             if (!enemies) {
                 enemies = createEnemiesArray();
-            } /* else if (Array.isArray(enemies)) {
-                if (enemies.length == 0) {
-                    enemies = createEnemiesArray();
-                }
-            }*/
+            }
             chooseEnemy();
             break;
         case 'battle':
