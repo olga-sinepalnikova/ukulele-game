@@ -78,12 +78,15 @@ class Player {
             case 'hit':
                 if (this.fightSkills.hit) {
                     enemy.health -= this.damage;
+                    console.log(this.damage);
                     return false;
                 }
 
             case 'strongHit':
                 if (this.fightSkills.strongHit) {
-                    enemy.health -= this.damage * 1.5;
+                    var atc = Math.floor(Math.random() * this.damage + this.damage * 0.75);
+                    console.log(atc);
+                    enemy.health -= (atc);
                     return false;
                 }
         }

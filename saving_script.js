@@ -1,33 +1,25 @@
 var settingsUser = document.getElementById('settings');
-var durationUserValue = document.getElementsByTagName("input")[0];
-var settingsText = document.getElementById('settingsText').innerText;
+var durationUserValue = document.querySelector("input#durationUser").value;
+var settingsText = document.getElementById('settingsText').innerHTML;
 
-// попытка автоматизировать получение селектов
-// var mapUp, mapLeft, mapDown, mapEnterBattle, mapEnterMenu, mapRight;
-// var list_of_settings = [mapUp, mapLeft, mapDown, mapRight, mapEnterMenu];
-// for (let i = 0; i < list_of_settings.length; i++) {
-//     list_of_settings[i] = document.getElementsByTagName('select')[i];
-//     console.log(list_of_settings);
-// }
+var mapUp = document.querySelector('select#mapModeUp');
+var mapLeft = document.querySelector('select#mapModeLeft');
+var mapDown = document.querySelector('select#mapModeDown');
+var mapRight = document.querySelector('select#mapModeRight');
+var mapEnterMenu = document.querySelector('select#mapModeInMenu');
+var mapEnterBattle = document.querySelector('select#mapModeInBattle');
 
-var mapUp = document.getElementsByTagName('select')[0];
-var mapLeft = document.getElementsByTagName('select')[1];
-var mapDown = document.getElementsByTagName('select')[2];
-var mapRight = document.getElementsByTagName('select')[3];
-var mapEnterMenu = document.getElementsByTagName('select')[4];
-var mapEnterBattle = document.getElementsByTagName('select')[5];
+var battleFire = document.querySelector('select#battleModeFire');
+var battleIce = document.querySelector('select#battleModeIce');
+var battlePlants = document.querySelector('select#battleModePlants');
+var battleHit = document.querySelector('select#battleModeHit');
+var battleStrongHit = document.querySelector('select#battleModeStrongHit');
+var battleHealing = document.querySelector('select#battleModeHealing');
+var battleBlock = document.querySelector('select#battleModeBlock');
 
-var battleFire = document.getElementsByTagName('select')[6];
-var battleIce = document.getElementsByTagName('select')[7];
-var battlePlants = document.getElementsByTagName('select')[8];
-var battleHit = document.getElementsByTagName('select')[9];
-var battleStrongHit = document.getElementsByTagName('select')[10];
-var battleHealing = document.getElementsByTagName('select')[11];
-var battleBlock = document.getElementsByTagName('select')[12];
-
-var chooseUp = document.getElementsByTagName('select')[13];
-var chooseDown = document.getElementsByTagName('select')[14];
-var chooseChoose = document.getElementsByTagName('select')[15];
+var chooseUp = document.querySelector('select#chooseModeUp');
+var chooseDown = document.querySelector('select#chooseModeDown');
+var chooseChoose = document.querySelector('select#chooseModeChoose');
 
 
 document.addEventListener('keydown', (e) => {
@@ -87,24 +79,33 @@ var actions = {
 
 var gameText = document.getElementById('game_text');
 
-console.log('map.down', actions.map.down);
-console.log(actions.battle.hit);
-
 function areNotEqual(...vars) {
     return vars.filter((e, i) => vars.indexOf(e) === i).length === vars.length;
 }
 
 var last = sessionStorage.getItem(settings);
-console.log(JSON.parse(sessionStorage.settings));
+console.log(last);
+console.log(sessionStorage.settings);
+if (last) {
+
+    actions = JSON.parse(last.settings.actions);
+}
+
+
 
 function enableUserSettings() {
 
     settingsUser.style.display = 'block';
     console.log(mapUp.value, mapLeft.value, mapDown.value, mapRight.value, mapEnterMenu.value, mapEnterBattle.value);
+    console.log(areNotEqual(chooseUp.value, chooseDown.value, chooseChoose.value));
     if (areNotEqual(mapUp.value, mapLeft.value, mapDown.value, mapRight.value, mapEnterMenu.value, mapEnterBattle.value)) {
         if (areNotEqual(battleFire.value, battleIce.value, battlePlants.value, battleHit.value, battleStrongHit.value, battleHealing.value, battleBlock.value)) {
-            console.log
             if (areNotEqual(chooseUp.value, chooseDown.value, chooseChoose.value)) {
+                durationUserValue = document.querySelector("input#durationUser").value;
+                if (!durationUserValue) {
+                    durationUserValue = duration;
+                }
+
                 actions.map.up = mapUp.value;
                 actions.map.left = mapLeft.value;
                 actions.map.down = mapDown.value;
@@ -123,26 +124,29 @@ function enableUserSettings() {
                 actions.chooseEnemy.up = chooseUp.value;
                 actions.chooseEnemy.down = chooseDown.value;
                 actions.chooseEnemy.choose = chooseChoose.value;
-                settingsText = `Окей, так можно`;
-                sessionStorage.setItem('settings', JSON.stringify(actions));
+
+                var userSettings = {
+                    'duration': durationUserValue,
+                    'actions': actions,
+                }
+                settingsText = `Окей, так можно
+                Настройки пропадут через 5с`;
+                sessionStorage.setItem('settings', JSON.stringify(userSettings));
                 setTimeout(() => {
                     settingsUser.style.display = 'none';
-                }, 10000);
+                }, 5000);
 
 
             } else {
                 settingsText = `Вы не можете ставить одинаковые ноты`;
-
             }
 
         } else {
             settingsText = `Вы не можете ставить одинаковые ноты`;
-
         }
 
     } else {
         settingsText = `Вы не можете ставить одинаковые ноты`;
-
     }
 
 }

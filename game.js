@@ -66,10 +66,12 @@ var gamemodeText = document.getElementById('gamemode');
 var enemies = undefined;
 
 function startGame() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
     if (Array.isArray(enemies)) {
         if (enemies.length > 0) {
-
-            enemy_hp.innerHTML = `Враг - ${enemies[currentEnemy].health} || Игрок - ${player.currentHealth}, lvl - ${player.level}, exp - ${player.xp}`;
+            if (enemies[currentEnemy]) {
+                enemy_hp.innerHTML = `Враг - ${enemies[currentEnemy].health} || Игрок - ${player.currentHealth}, lvl - ${player.level}, exp - ${player.xp}`;
+            }
         }
 
     } else {
@@ -85,11 +87,7 @@ function startGame() {
         case 'chooseEnemy':
             if (!enemies) {
                 enemies = createEnemiesArray();
-            } /* else if (Array.isArray(enemies)) {
-                if (enemies.length == 0) {
-                    enemies = createEnemiesArray();
-                }
-            }*/
+            }
             chooseEnemy();
             break;
         case 'battle':
@@ -100,6 +98,9 @@ function startGame() {
             break;
         case 'menu':
             menuMode();
+            break;
+        case 'end':
+            gameText.innerText = 'The end, обновите страницу для новой игры';
             break;
     }
 
@@ -128,6 +129,8 @@ var currentEnemy = 0;
 function chooseEnemy() {
     if (!player.currentHealth > 0 || !enemies.length > 0) {
         gameText.innerHTML = `Вы победили! для выхода сыграйте A#`;
+    } else {
+
     }
     gameText.innerText = `Вы в бою! Магические умения: А - перемещение выбора на 1 вниз,
     E - перемещение выбора на 1 вверх,
@@ -137,6 +140,7 @@ function chooseEnemy() {
     enemies.forEach(enemy => {
         enemy.update();
     });
+    player.draw();
     if (ableToActCheck()) {
         let act = actions.chooseEnemy;
         switch (noteElem.innerText) {
@@ -169,8 +173,11 @@ var step = true;  // true - player, false - enemies
 function battleMode() {
     let act = actions.battle;
     enemies.forEach(enemy => {
-        enemy.update();
+        if (enemy) {
+            enemy.update();
+        }
     });
+    player.draw();
     gameText.innerText = `Вы в бою! Магические умения: А - огонь ${player.magicSkills.fireball},
     В - лёд ${player.magicSkills.iceball},
     С - растения ${player.magicSkills.plants},
@@ -181,34 +188,28 @@ function battleMode() {
     G - блок
     Чтобы выйти из боя - убейте врага`;
     if (player.currentHealth > 0 && enemies.length > 0) {
-        if (ableToActCheck() && step) {
+        if (ableToActCheck() && step && attackedEnemy) {
             // console.log(enemies);
 
             // A - огонь, B - лёд, C - растения, D - удар, E - сильный удар, F - лечение, G - блок
             switch (noteElem.innerText) {
                 case act.fire:
                     step = player.magic(attackedEnemy, 'fire');
-                    // step = false;
                     break;
                 case act.fire:
                     step = player.magic(attackedEnemy, 'ice');
-                    // step = false;
                     break;
                 case act.plants:
                     step = player.magic(attackedEnemy, 'plants');
-                    // step = false;
                     break;
                 case act.hit:
                     step = player.attack(attackedEnemy, 'hit');
-                    // step = false;
                     break;
                 case act.strongHit:
                     step = player.attack(attackedEnemy, 'strongHit');
-                    // step = false;
                     break;
                 case act.healing:
                     step = player.healing();
-                    // step = false;
                     break;
                 case act.block:
                     player.block(attackedEnemy.attack());
@@ -219,16 +220,21 @@ function battleMode() {
 
         } else if (!step && !ableToActCheck() && attackedEnemy) {
             console.log('enemy attack');
-            enemies.forEach(enemy => {
+            enemies.forEach((enemy, index) => {
                 if (enemy.health > 0) {
                     player.takeDamage(enemy.attack());
                 } else {
-                    enemies.splice(enemy, 1)
+                    enemies.splice(index, 1)
                 }
             });
             gamemode = 'chooseEnemy';
             step = true;
+        } else if (!attackedEnemy) {
+            gamemode = 'chooseEnemy';
+            step = true;
         }
+    } else if (player.currentHealth <= 0) {
+        gamemode = 'end';
     } else {
         enemies = undefined;
         gamemode = 'map';
@@ -248,8 +254,8 @@ function menuMode() {
             case actions.menu.exit:
                 gamemode = 'map';
                 break;
-            case 'A':
-                createUserSettings();
+            // case 'A':
+            //     enableUserSettings();
         }
     }
 }
