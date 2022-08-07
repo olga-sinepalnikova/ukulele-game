@@ -25,6 +25,8 @@ class Player {
         this.inventory = {
             // предмет: [кол-во, эффект (?)]   
         };
+        this.room = levels.startRoom;
+        this.lastCoords = [this.x, this.y];
     }
 
     draw() {
@@ -33,30 +35,65 @@ class Player {
     }
 
     move() {
+        // todo: изменить на сравнение наличия перехода в комнату и только потом перетаскивать игрока
         if (!keyboardDown && duration >= MIN_DURATION) {
-            if (0 <= (this.y - this.height) && noteElem.innerText == actions.map.up) {
-                this.y -= this.height;
-            } else if (0 > (this.y - this.height)) {
-                this.y = 0;
+            if (noteElem.innerText == actions.map.up) {
+                if (0 <= (this.y - this.height)) {
+                    this.y -= this.height;
+                } else if (0 > (this.y - this.height)) {
+                    console.log('triggered up');
+                    if (this.room.up) {
+                        this.changeRoom('up');
+                        this.y = canvas.height - this.height - 5;
+                    } else {
+                        this.y = 5;
+                    }
+                }
+            }
+            if (noteElem.innerText == actions.map.down) {
+                if ((this.y + this.height) <= (canvas.height - this.height)) {
+                    this.y += this.height
+                } else if ((this.y + this.height) > (canvas.height - this.height)) {
+                    console.log('triggered down');
+                    if (this.room.down) {
+                        this.changeRoom('down');
+                        this.y = 5;
+                    } else {
+                        this.y = canvas.height - this.height - 5;
+
+                    }
+                }
             }
 
-            if ((this.y + this.height) <= (canvas.height - this.height) && noteElem.innerText == actions.map.down) {
-                this.y += this.height
-            } else if ((this.y + this.height) > (canvas.height - this.height)) {
-                this.y = canvas.height - this.height;
+            if (noteElem.innerText == actions.map.left) {
+                if (0 <= (this.x - this.width)) {
+                    this.x -= this.width;
+                } else if (0 > (this.x - this.width)) {
+                    if (this.room.left) {
+                        this.changeRoom('left');
+                        this.x = canvas.width - this.width - 5;
+                    } else {
+                        this.x = 5;
+                    }
+                }
             }
 
-            if (0 <= (this.x - this.width) && noteElem.innerText == actions.map.left) {
-                this.x -= this.width;
-            } else if (0 > (this.x - this.width)) {
-                this.x = 0;
+            if (noteElem.innerText == actions.map.right) {
+                if ((this.x + this.width) <= (canvas.width - this.width)) {
+                    this.x += this.width
+                } else if ((this.x + this.width) > (canvas.width - this.width)) {
+                    if (this.room.right) {
+                        this.changeRoom('right');
+                        this.x = 5;
+                    } else {
+                        this.x = canvas.width - this.width - 5;
+                    }
+                }
+            }
+            if (this.room !== levels.startRoom) {
+                this.startBattle();
             }
 
-            if ((this.x + this.width) <= (canvas.width - this.width) && noteElem.innerText == actions.map.right) {
-                this.x += this.width
-            } else if ((this.x + this.width) > (canvas.width - this.width)) {
-                this.x = canvas.width - this.width;
-            }
         }
         if (this.x < 0) {
             this.x = 0;
@@ -67,6 +104,52 @@ class Player {
             this.y = 0;
         } else if (this.y > canvas.height) {
             this.y = canvas.height - this.height;
+        }
+
+    }
+
+    changeRoom(side) {
+        switch (side) {
+            case 'up':
+                this.room = levels[this.room.up];
+                this.y = canvas.height - 50;
+                break;
+            case 'left':
+                this.room = levels[this.room.left];
+                this.x = canvas.width - 50;
+                break;
+            case 'down':
+                this.room = levels[this.room.down];
+                this.y = 10;
+                break;
+            case 'right':
+                this.room = levels[this.room.right];
+                this.x = 10;
+                break;
+        }
+        console.log(this.room);
+    }
+
+    startBattle() {
+
+        let chance = Math.random()
+        this.lastCoords = [this.x, this.y];
+        switch (this.room.difficult) {
+            case 'easy':
+                if (chance <= 0.3) {
+                    this.x = canvas.width / 2;
+                    this.y = canvas.height / 2 - this.width / 2;
+                    gamemode = 'chooseEnemy';
+                }
+                break;
+            case 'medium':
+                if (chance <= 0.49) {
+                    this.x = canvas.width / 2;
+                    this.y = canvas.height / 2 - this.width / 2;
+                    console.log('med');
+                    gamemode = 'chooseEnemy';
+                }
+                break;
         }
     }
 

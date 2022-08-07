@@ -28,7 +28,7 @@
 
 var smallBuffer = [];
 var keyboardDown = false;
-const MIN_DURATION = 15;
+var MIN_DURATION = 15;
 
 
 function ableToActCheck() {
@@ -118,17 +118,31 @@ function mapMode() {
                           F# - вниз,
                           G - вправо`;
     context.clearRect(0, 0, canvas.width, canvas.height);
-    player.move();
+    if (!customizing) {
+        player.move();
+    }
     player.draw();
+
     if (ableToActCheck() && noteElem.innerText == actions.map.enterBattle) {
         gamemode = 'chooseEnemy';
     }
+    if (player.room == levels['save'] || player.room == levels['save2']) {
+        var userSettings = {
+            'duration': durationUserValue,
+            'actions': actions,
+            'player': player,
+        }
+        sessionStorage.setItem('settings', JSON.stringify(userSettings));
+    }
+    loreOutput();
 }
 
 var currentEnemy = 0;
 function chooseEnemy() {
     if (!player.currentHealth > 0 || !enemies.length > 0) {
         gameText.innerHTML = `Вы победили! для выхода сыграйте A#`;
+        player.x = player.lastCoords[0];
+        player.y = player.lastCoords[1];
     } else {
 
     }
@@ -217,7 +231,6 @@ function battleMode() {
                     break;
             }
 
-
         } else if (!step && !ableToActCheck() && attackedEnemy) {
             console.log('enemy attack');
             enemies.forEach((enemy, index) => {
@@ -280,3 +293,4 @@ function cheatLevelUp() {
     }
     player.levelUp();
 }
+

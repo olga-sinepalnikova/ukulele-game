@@ -85,11 +85,22 @@
 		A - огонь, B - лёд, C - растения, D - удар, E - сильный удар, F - лечение, G - блок <br>
 		</h1> -->
 
-		<button onclick="toggleLiveInput()">Начать игру</button>
+		<!-- <button onclick="toggleLiveInput()">Начать игру</button> -->
 		<button onclick="cheatLevelUp()">Увеличить уровень до след умения</button>
+		<button onclick="nextRoom()">Следующая комната</button>
 		<!--<button onclick="updatePitch(0);">sample</button>-->
+
+
+		<button onclick="getInstrument('ukulele'); toggleLiveInput()" class="chooseInstrument">Укулеле
+			(рекомендумый)</button>
+		<button onclick="getInstrument('guitar'); toggleLiveInput()" class="chooseInstrument">Гитара</button>
+		<button onclick="getInstrument('bass-guitar'); toggleLiveInput()" class="chooseInstrument">Басс-гитара</button>
+		<button onclick="getInstrument('piano'); toggleLiveInput()" class="chooseInstrument">Пианино</button>
+		<button onclick="getInstrument('custom'); toggleLiveInput()" class="chooseInstrument">Создать своё
+			управление</button>
+
 	</p>
-	<canvas id="game_canvas" width="500" height="256"></canvas>
+	<canvas id="game_canvas" width="570" height="290"></canvas>
 
 
 	<div id="detector" class="vague">
@@ -103,7 +114,7 @@
 	<p>Войти в настройки можно только в меню или на карте, ваши настройки сохраняются при перезагрузке страницы, но
 		сбрасываются при закрытии браузера (я изменю это позже) войти в настройки - нажать s\ы, сбросить настройки d\в
 	</p>
-	<!--ПОРЯДОК ВЫПАДАЮЩИХ СПИСКОВ НИ В КОЕМ СЛУЧАЕ НЕ МЕНЯТЬ-->
+
 	<div id="settings">
 		<input type="number" name="input" id="durationUser" max="60" min="5">
 
@@ -397,11 +408,17 @@
 	<h1 id="enemy_hp"></h1>
 	<!-- just used for debugging
 	<canvas id="waveform" width="512" height="256"></canvas> -->
-
 	<script src="saving_script.js"></script>
+
 	<script src="game.js"></script>
+	<script src="map_data.js"></script>
 	<script src="player_class.js"></script>
+	<!-- <script src="output_lore.js"></script> -->
+	<script src="map.js"></script>
+
 	<script src="enemy_class.js"></script>
+
+
 
 
 </body>

@@ -24,18 +24,23 @@ var chooseChoose = document.querySelector('select#chooseModeChoose');
 
 document.addEventListener('keydown', (e) => {
     if (gamemode == "menu" || gamemode == "map") {
+
         switch (e.key) {
             case 's':
             case 'ы':
                 console.log('wkwk');
                 if (settingsUser.style.display == 'block') {
+                    customizing = false;
+
                     settingsUser.style.display = 'none';
                 } else {
+                    customizing = true;
                     settingsUser.style.display = 'block';
                 }
                 break;
             case 'd':
             case 'в':
+                customizing = false;
                 settingsUser.style.display = 'none';
                 clearSettings();
                 break;
@@ -43,7 +48,20 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+var instrument;
+function getInstrument(inst) {
+    if (inst == 'custom') {
+        if (settingsUser.style.display == 'block') {
+            settingsUser.style.display = 'none';
+        } else {
+            settingsUser.style.display = 'block';
+        }
+    } else {
 
+    }
+    instrument = inst;
+    console.log(inst);
+}
 
 var actions = {
     map: {
@@ -91,19 +109,18 @@ if (last) {
     actions = JSON.parse(last.settings.actions);
 }
 
-
-
+var customizing = false;
 function enableUserSettings() {
 
+
     settingsUser.style.display = 'block';
-    console.log(mapUp.value, mapLeft.value, mapDown.value, mapRight.value, mapEnterMenu.value, mapEnterBattle.value);
-    console.log(areNotEqual(chooseUp.value, chooseDown.value, chooseChoose.value));
+
     if (areNotEqual(mapUp.value, mapLeft.value, mapDown.value, mapRight.value, mapEnterMenu.value, mapEnterBattle.value)) {
         if (areNotEqual(battleFire.value, battleIce.value, battlePlants.value, battleHit.value, battleStrongHit.value, battleHealing.value, battleBlock.value)) {
             if (areNotEqual(chooseUp.value, chooseDown.value, chooseChoose.value)) {
                 durationUserValue = document.querySelector("input#durationUser").value;
-                if (!durationUserValue) {
-                    durationUserValue = duration;
+                if (durationUserValue < 5 || !durationUserValue) {
+                    durationUserValue = MIN_DURATION;
                 }
 
                 actions.map.up = mapUp.value;
@@ -125,15 +142,18 @@ function enableUserSettings() {
                 actions.chooseEnemy.down = chooseDown.value;
                 actions.chooseEnemy.choose = chooseChoose.value;
 
+
                 var userSettings = {
-                    'duration': durationUserValue,
+                    'MIN_DURATION': durationUserValue,
                     'actions': actions,
+                    'player': player,
                 }
                 settingsText = `Окей, так можно
                 Настройки пропадут через 5с`;
                 sessionStorage.setItem('settings', JSON.stringify(userSettings));
                 setTimeout(() => {
                     settingsUser.style.display = 'none';
+                    customizing = false;
                 }, 5000);
 
 
