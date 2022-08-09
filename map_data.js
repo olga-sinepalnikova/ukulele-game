@@ -21,7 +21,10 @@ var levels = {
         left: 'startRoom',
         right: 'lvl1_room3',
         difficult: 'easy',
-        text: '',
+        text: `О! Твой первый бой
+Ты пока совсем слабый...
+Попробуй просто ударить кулаком
+Сыграй ${actions.battle.hit}`,
         read: false,
 
     },

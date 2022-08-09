@@ -62,6 +62,7 @@ var canvas = document.getElementById('game_canvas');
 var context = canvas.getContext('2d');
 
 var gamemode = 'map'; // 0/map - бродилка по карте, 1/battle - бой с врагами, 2/cutscene - катсцена, 3/menu - менюшки, 4/chooseEnemy - выбор врага
+var lastGamemode = gamemode;
 var gamemodeText = document.getElementById('gamemode');
 var enemies = undefined;
 
@@ -134,11 +135,22 @@ function mapMode() {
         }
         sessionStorage.setItem('settings', JSON.stringify(userSettings));
     }
-    loreOutput();
+    switch (player.room) {
+        case levels.startRoom:
+            if (!levels.startRoom.read) {
+                lastGamemode = gamemode;
+                gamemode = 'cutscene';
+            }
+            break;
+    }
 }
 
 var currentEnemy = 0;
 function chooseEnemy() {
+    if (!levels.lvl1_room2.read) {
+        lastGamemode = gamemode;
+        gamemode = 'cutscene';
+    }
     if (!player.currentHealth > 0 || !enemies.length > 0) {
         gameText.innerHTML = `Вы победили! для выхода сыграйте A#`;
         player.x = player.lastCoords[0];
@@ -256,7 +268,14 @@ function battleMode() {
 }
 
 function cutsceneMode() {
-    // запускать гифку 
+    player.draw();
+    if (enemies) {
+        enemies.forEach(enemy => {
+            enemy.update();
+        });
+    }
+
+    outputLore(player.room);
 }
 
 function menuMode() {

@@ -2,7 +2,7 @@ class Player {
     constructor() {
         this.width = 40;
         this.height = 40;
-        this.x = canvas.width / 2;
+        this.x = 10;
         this.y = canvas.height / 2;
         this.color = 'blue';
         this.maxHealth = 100;
@@ -36,7 +36,7 @@ class Player {
 
     move() {
         // todo: изменить на сравнение наличия перехода в комнату и только потом перетаскивать игрока
-        if (!keyboardDown && duration >= MIN_DURATION) {
+        if (ableToActCheck()) {
             if (noteElem.innerText == actions.map.up) {
                 if (0 <= (this.y - this.height)) {
                     this.y -= this.height;
