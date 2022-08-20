@@ -12,30 +12,30 @@ class Player {
         this.xp = 0;
         this.maxXp = 100;
         this.magicSkills = {
-            fireball: false, // false
-            iceball: false, // false
-            plants: false, // false
-            healing: false, // false
+            fireball: [false, 'огненный шар'], // false
+            iceball: [false, 'ледяной шар'], // false
+            plants: [false, 'корни'], // false
+            healing: [false, 'лечение'], // false
         };
         this.fightSkills = {
-            hit: true,
-            block: true,
-            strongHit: false, //изначально false
+            hit: [true, 'удар'],
+            block: [true, 'защита'],
+            strongHit: [false, 'усиленный удар'], //изначально false
         };
         this.inventory = {
             // предмет: [кол-во, эффект (?)]   
         };
-        this.room = levels.startRoom;
+        this.room = levels.lvl1_room2; //levels.lvl1_room2 // levels.startRoom;
         this.lastCoords = [this.x, this.y];
     }
 
     draw() {
+        //заменить на отображение спрайта
         context.fillStyle = 'blue';
         context.fillRect(this.x, this.y, this.width, this.height);
     }
 
     move() {
-        // todo: изменить на сравнение наличия перехода в комнату и только потом перетаскивать игрока
         if (ableToActCheck()) {
             if (noteElem.innerText == actions.map.up) {
                 if (0 <= (this.y - this.height)) {
@@ -50,6 +50,7 @@ class Player {
                     }
                 }
             }
+
             if (noteElem.innerText == actions.map.down) {
                 if ((this.y + this.height) <= (canvas.height - this.height)) {
                     this.y += this.height
@@ -60,7 +61,6 @@ class Player {
                         this.y = 5;
                     } else {
                         this.y = canvas.height - this.height - 5;
-
                     }
                 }
             }
@@ -90,16 +90,19 @@ class Player {
                     }
                 }
             }
+
             if (this.room !== levels.startRoom) {
-                this.startBattle();
+                // this.startBattle();
             }
 
         }
+
         if (this.x < 0) {
             this.x = 0;
         } else if (this.x > canvas.width) {
             this.x = canvas.width - this.width;
         }
+
         if (this.y < 0) {
             this.y = 0;
         } else if (this.y > canvas.height) {
@@ -131,7 +134,6 @@ class Player {
     }
 
     startBattle() {
-
         let chance = Math.random()
         this.lastCoords = [this.x, this.y];
         switch (this.room.difficult) {
@@ -150,6 +152,10 @@ class Player {
                     gamemode = 'chooseEnemy';
                 }
                 break;
+            default:
+                this.x = canvas.width / 2;
+                this.y = canvas.height / 2 - this.width / 2;
+                break;
         }
     }
 
@@ -164,7 +170,6 @@ class Player {
                     console.log(this.damage);
                     return false;
                 }
-
             case 'strongHit':
                 if (this.fightSkills.strongHit) {
                     var atc = Math.floor(Math.random() * this.damage + this.damage * 0.75);

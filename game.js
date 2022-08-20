@@ -26,38 +26,6 @@
 //     'A': 'undo',
 // };
 
-var smallBuffer = [];
-var keyboardDown = false;
-var MIN_DURATION = 15;
-
-
-function ableToActCheck() {
-    return !keyboardDown && duration >= MIN_DURATION;
-}
-
-function isNotePlaying(currentNote) {
-    smallBuffer.push(currentNote);
-    if (smallBuffer.length >= 2 && smallBuffer[0] == smallBuffer[1]) {
-        // console.log(playingNote, 'changing', smallBuffer);
-        smallBuffer.splice(0, smallBuffer.length - 1);
-        if (!keyboardDown) {
-            // console.log(`your note is ${currentNote}, and buffer is`, smallBuffer);
-            keyboardDown = true;
-        }
-    } else if (smallBuffer.length == 1 && duration >= MIN_DURATION) {
-        if (!keyboardDown) {
-            // console.log(`u r in else if, your note is ${currentNote}, and buffer is`, smallBuffer);
-            keyboardDown = false;
-        }
-        // console.log(noteAct, 'else if', smallBuffer - 1);
-    } else if (duration >= MIN_DURATION) {
-        keyboardDown = false;
-        // console.log('back to false', playingNote);
-        smallBuffer.splice(0, smallBuffer.length - 1);
-    };
-    // console.log(keyboardDown);
-}
-
 var canvas = document.getElementById('game_canvas');
 var context = canvas.getContext('2d');
 
@@ -119,14 +87,13 @@ function mapMode() {
                           F# - вниз,
                           G - вправо`;
     context.clearRect(0, 0, canvas.width, canvas.height);
-    if (!customizing) {
-        player.move();
-    }
+    if (!customizing) player.move();  // если игрок не в настройках -> двигаться
     player.draw();
 
     if (ableToActCheck() && noteElem.innerText == actions.map.enterBattle) {
         gamemode = 'chooseEnemy';
-    }
+    };
+
     if (player.room == levels['save'] || player.room == levels['save2']) {
         var userSettings = {
             'duration': durationUserValue,
@@ -134,137 +101,25 @@ function mapMode() {
             'player': player,
         }
         sessionStorage.setItem('settings', JSON.stringify(userSettings));
-    }
-    switch (player.room) {
-        case levels.startRoom:
-            if (!levels.startRoom.read) {
-                lastGamemode = gamemode;
-                gamemode = 'cutscene';
-            }
-            break;
-    }
-}
+    };
 
-var currentEnemy = 0;
-function chooseEnemy() {
-    if (!levels.lvl1_room2.read) {
-        lastGamemode = gamemode;
-        gamemode = 'cutscene';
-    }
-    if (!player.currentHealth > 0 || !enemies.length > 0) {
-        gameText.innerHTML = `Вы победили! для выхода сыграйте A#`;
-        player.x = player.lastCoords[0];
-        player.y = player.lastCoords[1];
-    } else {
+    startCutscene();
 
-    }
-    gameText.innerText = `Вы в бою! Магические умения: А - перемещение выбора на 1 вниз,
-    E - перемещение выбора на 1 вверх,
-    А# - подтверждение выбора.
-    сейчас выбран враг номер - ${currentEnemy + 1} (считая сверху)
-    Чтобы выйти из боя - убейте врага`;
-    enemies.forEach(enemy => {
-        enemy.update();
-    });
-    player.draw();
-    if (ableToActCheck()) {
-        let act = actions.chooseEnemy;
-        switch (noteElem.innerText) {
-            case act.down:
-                if (currentEnemy + 1 < enemies.length) {
-                    currentEnemy += 1;
-                } else {
-                    currentEnemy = 0;
-                };
-                break;
-            case act.up:
-                if (currentEnemy - 1 >= 0) {
-                    currentEnemy -= 1;
-                } else {
-                    currentEnemy = enemies.length - 1;
-                };
-                break;
-            case act.choose:
-                console.log(enemies[currentEnemy]);
-                gamemode = 'battle';
-                attackedEnemy = enemies[currentEnemy];
-                break;
-        };
-    }
-    // console.log(currentEnemy);
-}
-
-var attackedEnemy = undefined;
-var step = true;  // true - player, false - enemies
-function battleMode() {
-    let act = actions.battle;
-    enemies.forEach(enemy => {
-        if (enemy) {
-            enemy.update();
-        }
-    });
-    player.draw();
-    gameText.innerText = `Вы в бою! Магические умения: А - огонь ${player.magicSkills.fireball},
-    В - лёд ${player.magicSkills.iceball},
-    С - растения ${player.magicSkills.plants},
-    F - лечение ${player.magicSkills.healing}
-
-    Боевые умения: D - удар,
-    E - сильный удар ${player.fightSkills.strongHit},
-    G - блок
-    Чтобы выйти из боя - убейте врага`;
-    if (player.currentHealth > 0 && enemies.length > 0) {
-        if (ableToActCheck() && step && attackedEnemy) {
-            // console.log(enemies);
-
-            // A - огонь, B - лёд, C - растения, D - удар, E - сильный удар, F - лечение, G - блок
-            switch (noteElem.innerText) {
-                case act.fire:
-                    step = player.magic(attackedEnemy, 'fire');
-                    break;
-                case act.fire:
-                    step = player.magic(attackedEnemy, 'ice');
-                    break;
-                case act.plants:
-                    step = player.magic(attackedEnemy, 'plants');
-                    break;
-                case act.hit:
-                    step = player.attack(attackedEnemy, 'hit');
-                    break;
-                case act.strongHit:
-                    step = player.attack(attackedEnemy, 'strongHit');
-                    break;
-                case act.healing:
-                    step = player.healing();
-                    break;
-                case act.block:
-                    player.block(attackedEnemy.attack());
-                    step = true; // так как в блоке в любом случае принимается урон
-                    break;
-            }
-
-        } else if (!step && !ableToActCheck() && attackedEnemy) {
-            console.log('enemy attack');
-            enemies.forEach((enemy, index) => {
-                if (enemy.health > 0) {
-                    player.takeDamage(enemy.attack());
-                } else {
-                    enemies.splice(index, 1)
-                }
+    if (!player.room.read && player.room == levels.lvl1_room2) {
+        lastGamemode = 'chooseEnemy';
+        console.log('tsarted');
+        player.x = canvas.width / 2;
+        player.y = canvas.height / 2 - player.width / 2;
+        if (enemies) {
+            enemies.forEach(enemy => {
+                enemy.update();
             });
-            gamemode = 'chooseEnemy';
-            step = true;
-        } else if (!attackedEnemy) {
-            gamemode = 'chooseEnemy';
-            step = true;
-        }
-    } else if (player.currentHealth <= 0) {
-        gamemode = 'end';
-    } else {
-        enemies = undefined;
-        gamemode = 'map';
-        step = true;
-    }
+        } else {
+            enemies = createEnemiesArray();
+        };
+
+        gamemode = 'cutscene';
+    };
 }
 
 function cutsceneMode() {
@@ -292,24 +147,4 @@ function menuMode() {
     }
 }
 
-function cheatLevelUp() {
-    switch (player.level) {
-        case 1:
-            player.level = 4;
-            break;
-        case 5:
-            player.level = 14;
-            break;
-        case 15:
-            player.level = 19;
-            break;
-        case 20:
-            player.level = 29;
-            break;
-        case 30:
-            player.level = 54;
-            break;
-    }
-    player.levelUp();
-}
 

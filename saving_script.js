@@ -73,8 +73,8 @@ var actions = {
         enterMenu: 'A#'
     },
     battle: {
-        fire: 'A',
-        ice: 'B',
+        fireball: 'A',
+        iceball: 'B',
         plants: 'C',
         hit: 'D',
         strongHit: 'E',
@@ -91,6 +91,10 @@ var actions = {
         down: 'A',
         exit: 'B',
         choose: 'A#',
+    },
+    cutscene: {
+        skip: 'E',
+        nextPhrase: 'C',
     }
 }
 
@@ -130,8 +134,8 @@ function enableUserSettings() {
                 actions.map.enterMenu = mapEnterMenu.value;
                 actions.map.enterBattle = mapEnterBattle.value;
 
-                actions.battle.fire = battleFire.value;
-                actions.battle.ice = battleIce.value;
+                actions.battle.fireball = battleFire.value;
+                actions.battle.iceball = battleIce.value;
                 actions.battle.plants = battlePlants.value;
                 actions.battle.hit = battleHit.value;
                 actions.battle.strongHit = battleStrongHit.value;
