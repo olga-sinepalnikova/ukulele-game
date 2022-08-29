@@ -1,9 +1,15 @@
 //здесь лежат функции, которые используются в game.js (кроме функций основанных на gamemode)
+// а также цвета, которые используются позже
 //убраны для облегчения чтения
 var smallBuffer = [];
 var keyboardDown = false;
-var MIN_DURATION = 15;
+var MIN_DURATION = 15; // было константой
 
+const CURRENT_ENEMY_COLOR = '#FF951D';
+const ENEMY_COLOR = '#ED1B1B';
+
+const AVAILABLE_ABILITY_COLOR = '#17D0C8';
+const UNAVAILABLE_ABILITY_COLOR = '#939393';
 
 function ableToActCheck() {
     return !keyboardDown && duration >= MIN_DURATION;
@@ -12,24 +18,20 @@ function ableToActCheck() {
 function isNotePlaying(currentNote) {
     smallBuffer.push(currentNote);
     if (smallBuffer.length >= 2 && smallBuffer[0] == smallBuffer[1]) {
-        // console.log(playingNote, 'changing', smallBuffer);
         smallBuffer.splice(0, smallBuffer.length - 1);
         if (!keyboardDown) {
-            // console.log(`your note is ${currentNote}, and buffer is`, smallBuffer);
             keyboardDown = true;
         }
+
     } else if (smallBuffer.length == 1 && duration >= MIN_DURATION) {
         if (!keyboardDown) {
-            // console.log(`u r in else if, your note is ${currentNote}, and buffer is`, smallBuffer);
             keyboardDown = false;
         }
-        // console.log(noteAct, 'else if', smallBuffer - 1);
+
     } else if (duration >= MIN_DURATION) {
         keyboardDown = false;
-        // console.log('back to false', playingNote);
         smallBuffer.splice(0, smallBuffer.length - 1);
     };
-    // console.log(keyboardDown);
 }
 
 function startCutscene() {
@@ -39,6 +41,7 @@ function startCutscene() {
     }
 }
 
+// убрать перед финалом
 function cheatLevelUp() {
     switch (player.level) {
         case 1:

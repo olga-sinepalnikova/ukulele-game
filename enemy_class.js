@@ -11,7 +11,7 @@ class Enemy {
     }
 
     attack() {
-        return this.damage;//Math.floor((this.level * this.damage) / 2));
+        return Math.floor((this.level * this.damage) / 2);
     }
 
     block(dmg) {
@@ -26,20 +26,35 @@ class Enemy {
         // chance of block 3 of player.damage / enemy.level 25-75%
     }
 
-    update() {
+    update(color) {
         // animation-loop
-        context.fillStyle = 'red';
+        context.fillStyle = color;
         context.fillRect(this.x, this.y, this.width, this.height);
     }
 
     die() {
-        player.xp += this.level * Math.floor(Math.random() * 5 + 5);
+        let earnedXp = this.level * Math.floor(Math.random() * 5 + 5);
+        // игрок получает (от 5 до 10 ед опыта) * на уровень
+
+        let earnedMoney = this.level * Math.floor(Math.random() * (10 - 3 + 1) + 3);
+        // игрок получает (от 3 до 10 монет) * на уровень
+
+        player.xpUp(earnedXp, earnedMoney);
+        return [earnedXp, earnedMoney];
     }
 }
 
-// var dummy = new Enemy(5);
-function createEnemiesArray() {
-    return [new Enemy(1, 20)];
+function createEnemiesArray(difficulty) {
+    //посмотреть как настроить к сложности
+    let count = Math.floor(Math.random() * (3 - 1 + 1) + 1);
+    let enemiesArray = [];
+    let x = 20
+    for (let i = 0; i < count; i++) {
+        enemiesArray[i] = new Enemy(Math.floor(Math.random() * (3 - 1 + 1) + 1), x)
+        x += 40;
+    }
+    // return enemiesArray;
+    return [new Enemy(2, 20)];
 
     // return [new Enemy(2, 20), new Enemy(4, 60), new Enemy(3, 100)];
 }

@@ -22,10 +22,8 @@ class Player {
             block: [true, 'защита'],
             strongHit: [false, 'усиленный удар'], //изначально false
         };
-        this.inventory = {
-            // предмет: [кол-во, эффект (?)]   
-        };
-        this.room = levels.lvl1_room2; //levels.lvl1_room2 // levels.startRoom;
+        this.money = 0;
+        this.room = levels.startRoom; //levels.lvl1_room2 // levels.lvl1_room2;
         this.lastCoords = [this.x, this.y];
     }
 
@@ -157,6 +155,8 @@ class Player {
                 this.y = canvas.height / 2 - this.width / 2;
                 break;
         }
+
+        //createEnemiesArray(this.room.difficult);
     }
 
     attack(enemy, type) {
@@ -178,7 +178,7 @@ class Player {
                     return false;
                 }
         }
-        return true
+        return true;
     }
 
     block(dmg) {
@@ -252,24 +252,26 @@ class Player {
 
         switch (this.level) {
             case 5:
-                this.fightSkills.strongHit = true;
+                this.fightSkills.strongHit[0] = true;
                 break;
             case 15:
-                this.magicSkills.healing = true;
+                this.magicSkills.healing[0] = true;
                 break;
             case 20:
-                this.magicSkills.fireball = true;
+                this.magicSkills.fireball[0] = true;
                 break;
             case 30:
-                this.magicSkills.iceball = true;
+                this.magicSkills.iceball[0] = true;
                 break;
             case 55:
-                this.magicSkills.plants = true;
+                this.magicSkills.plants[0] = true;
                 break;
         }
     }
 
-    xpUp() {
+    xpUp(someXp, someMoney) {
+        this.xp += someXp;
+        this.money += someMoney;
         if (this.xp >= this.maxXp) {
             this.xp -= this.maxXp;
             if (this.level < 10) {
@@ -284,7 +286,6 @@ class Player {
 };
 
 var player = new Player();
-// startGame();
 
 /*  healing test
 console.log(player.currnetHealth);
@@ -297,6 +298,6 @@ console.log(player.currnetHealth);
 
 stats test
 for (let i = 1; i <= 100; i++) {
-    player.levelUp();
-    console.log(player.level, player.health, player.damage);
+    player.xpUp(100);
+    console.log(player.level, player.currentHealth, player.damage);
 } */

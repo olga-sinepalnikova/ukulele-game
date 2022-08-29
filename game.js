@@ -1,31 +1,3 @@
-/* Аккорды - действие (могут быть не все задействованы)
-    0/map/карта:
-        'D': 'up',
-        'F': 'left',
-        'C': 'right',
-        'F#': 'down',
-        'B': 'enter',
-    1/battle/бой, 3/menu/меню:
-        'D': 'up',
-        'F': 'left',
-        'G': 'right',
-        'B': 'down',
-        'A': 'select', (item or act or else)
-    2/cutscene/катсцена:
-        'C': skip 1 dialog,
-        'F': skip whole scene,
-        'G': next dialog
-*/
-// var noteAct = {
-//     'D': 'up',
-//     'F': 'left',
-//     'G': 'right',
-//     'B': 'down',
-//     'F#': 'select',
-//     'C': 'back',
-//     'A': 'undo',
-// };
-
 var canvas = document.getElementById('game_canvas');
 var context = canvas.getContext('2d');
 
@@ -45,7 +17,6 @@ function startGame() {
 
     } else {
         enemy_hp.innerHTML = `Враг - ??? || Игрок - ${player.currentHealth}, lvl - ${player.level}, exp - ${player.xp}`;
-
     }
 
     gamemodeText.innerText = gamemode;
@@ -81,15 +52,11 @@ function startGame() {
 }
 
 function mapMode() {
-    gameText.innerText = `Вы на карте! Чтобы войти в меню - сыграйте А#, чтобы войти в бой - Е
-    для передвижения используйте D - вверх
-                          F - влево,
-                          F# - вниз,
-                          G - вправо`;
     context.clearRect(0, 0, canvas.width, canvas.height);
     if (!customizing) player.move();  // если игрок не в настройках -> двигаться
     player.draw();
 
+    // убрать перед выпуском
     if (ableToActCheck() && noteElem.innerText == actions.map.enterBattle) {
         gamemode = 'chooseEnemy';
     };
@@ -112,7 +79,7 @@ function mapMode() {
         player.y = canvas.height / 2 - player.width / 2;
         if (enemies) {
             enemies.forEach(enemy => {
-                enemy.update();
+                enemy.update(ENEMY_COLOR);
             });
         } else {
             enemies = createEnemiesArray();
@@ -120,13 +87,17 @@ function mapMode() {
 
         gamemode = 'cutscene';
     };
+
+    if (player.room == levels.boss) {
+        var boss = new Boss();
+    }
 }
 
 function cutsceneMode() {
     player.draw();
     if (enemies) {
         enemies.forEach(enemy => {
-            enemy.update();
+            enemy.update(ENEMY_COLOR);
         });
     }
 
@@ -135,7 +106,7 @@ function cutsceneMode() {
 
 function menuMode() {
     // тут должы быть настройки (и статы игрока ?)
-    // gameText.innerText = `Чтобы выйти сыграйте В`;
+    gameText.innerText = `Чтобы выйти сыграйте В`;
     if (ableToActCheck()) {
         switch (noteElem.innerText) {
             case actions.menu.exit:
@@ -146,5 +117,3 @@ function menuMode() {
         }
     }
 }
-
-

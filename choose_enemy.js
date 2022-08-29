@@ -1,22 +1,26 @@
 var currentEnemy = 0;
 function chooseEnemy() {
-    if (!player.currentHealth > 0 || !enemies.length > 0) {
-        gameText.innerHTML = `Вы победили! для выхода сыграйте A#`;
-        // показывать статы за бой
-        // showStas();
+    displayControls();
+    if (!player.currentHealth > 0 && !enemies.length > 0) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        showStats();
+
         player.x = player.lastCoords[0];
         player.y = player.lastCoords[1];
     };
 
-    gameText.innerText = `Вы в бою! Магические умения: А - перемещение выбора на 1 вниз,
-    E - перемещение выбора на 1 вверх,
-    А# - подтверждение выбора.
-    сейчас выбран враг номер - ${currentEnemy + 1} (считая сверху)
-    Чтобы выйти из боя - убейте врага`;
-    enemies.forEach(enemy => {
-        enemy.update();
-    });
-    player.draw();
+    if (player.currentHealth > 0 && enemies.length > 0) {
+        enemies.forEach(enemy => {
+            enemy.update(ENEMY_COLOR);
+        });
+        player.draw();
+
+        if (enemies[currentEnemy]) enemies[currentEnemy].update(CURRENT_ENEMY_COLOR);
+
+    } else {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        showStats();
+    }
 
     if (ableToActCheck()) {
         let act = actions.chooseEnemy;
@@ -28,6 +32,7 @@ function chooseEnemy() {
                     currentEnemy = 0;
                 };
                 break;
+
             case act.up:
                 if (currentEnemy - 1 >= 0) {
                     currentEnemy -= 1;
@@ -35,30 +40,47 @@ function chooseEnemy() {
                     currentEnemy = enemies.length - 1;
                 };
                 break;
+
             case act.choose:
                 console.log(enemies[currentEnemy]);
                 gamemode = 'battle';
                 attackedEnemy = enemies[currentEnemy];
                 break;
         };
-    }
+    };
     // console.log(currentEnemy);
 }
 
-// function displayAbilities() {
-//     y = canvas.height * 0.7;
-//     Object.entries(actions.chooseEnemy).forEach(([skill, args]) => {
-//         context.font = "bold 20px Calibri";
+function displayControls() {
+    y = canvas.height * 0.75;
 
-//         var learned = args[0];
-//         var skillName = args[1];
-//         if (learned) {
-//             context.fillStyle = AVAILABLE;
-//         } else {
-//             context.fillStyle = UNAVAILABLE;
-//         }
+    context.font = "bold 24px Calibri";
+    context.fillStyle = 'gray';
 
-//         context.fillText(skillName + ` [${actions.battle[skill]}]`, 15, y, canvas.width - 30);
-//         y += 25;
-//     })
-// }
+    context.fillText(`выбор вверх  [${actions.chooseEnemy.up}]`, 15, y, canvas.width - 30);
+    y += 30;
+    context.fillText(`подтвердить  [${actions.chooseEnemy.choose}]`, 15, y, canvas.width - 30);
+    y += 30;
+    context.fillText(`выбор вниз  [${actions.chooseEnemy.down}]`, 15, y, canvas.width - 30);
+}
+
+function showStats() {
+    // опыт, монеты, уровень
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (player.currentHealth > 0) {
+        context.fillStyle = '#20CD2B';  // зеленый 
+        context.fillRect(20, 20, canvas.width - 40, canvas.height - 40);
+    } else {
+        context.fillStyle = '#F02307'; // красный
+        context.fillRect(20, 20, canvas.width - 40, canvas.height - 40);
+    }
+
+    context.font = "bold 24px Calibri";
+    context.fillStyle = 'black';
+    console.log(earnedMoneyInBattle, earnedXpInBattle);
+    context.fillText(earnedXpInBattle + ' ед. опыта', 30, canvas.height * 0.6, canvas.width - 30);
+    context.fillText(earnedMoneyInBattle + ' монет', 30, canvas.height * 0.5, canvas.width - 30);
+    context.fillText(`принять [${actions.chooseEnemy.choose}]`, 30, canvas.height * 0.8, canvas.width - 30);
+
+}

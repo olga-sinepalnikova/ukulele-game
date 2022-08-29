@@ -34,6 +34,4 @@ function outputLore(currentRoom) {
     context.fillText(`[далее - ${actions.cutscene.nextPhrase}]`, canvas.width * 0.5, canvas.height * 0.95, canvas.width - 30);
     context.fillText(`[пропустить - ${actions.cutscene.skip}]`, canvas.width * 0.7, canvas.height * 0.95, canvas.width - 30);
     // console.log(text_lore);
-
-
 };
