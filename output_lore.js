@@ -8,6 +8,7 @@ function outputLore(currentRoom) {
     context.fillStyle = "black";
     var text_lore = currentRoom.text.split('\n');
 
+
     if (ableToActCheck()) {
         if (noteElem.innerText == actions.cutscene.nextPhrase) {
             if (line < player.room.text.split('\n').length - 1) {

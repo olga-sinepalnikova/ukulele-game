@@ -10,6 +10,7 @@ function chooseEnemy() {
     };
 
     if (player.currentHealth > 0 && enemies.length > 0) {
+        console.log(enemies);
         enemies.forEach(enemy => {
             enemy.update(ENEMY_COLOR);
         });

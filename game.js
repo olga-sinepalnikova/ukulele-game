@@ -5,6 +5,7 @@ var gamemode = 'map'; // 0/map - бродилка по карте, 1/battle - б
 var lastGamemode = gamemode;
 var gamemodeText = document.getElementById('gamemode');
 var enemies = undefined;
+var boss = undefined;
 
 function startGame() {
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -88,9 +89,6 @@ function mapMode() {
         gamemode = 'cutscene';
     };
 
-    if (player.room == levels.boss) {
-        var boss = new Boss();
-    }
 }
 
 function cutsceneMode() {
@@ -99,6 +97,15 @@ function cutsceneMode() {
         enemies.forEach(enemy => {
             enemy.update(ENEMY_COLOR);
         });
+    }
+
+    if (player.room == levels.boss) {
+        var boss = new Boss();
+        boss.update('black');
+        player.x = canvas.width / 2;
+        player.y = canvas.height / 2 - player.width / 2;
+        enemies = [boss];
+        lastGamemode = 'chooseEnemy';
     }
 
     outputLore(player.room);

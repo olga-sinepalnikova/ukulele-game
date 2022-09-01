@@ -1,8 +1,8 @@
 class Enemy {
-    constructor(level, y) {
+    constructor(level, y, x = 10) {
         this.width = 20;
         this.height = 20;
-        this.x = 10;
+        this.x = x;
         this.y = y;
         this.level = level;
         this.damage = 10;
@@ -52,6 +52,12 @@ function createEnemiesArray(difficulty) {
     for (let i = 0; i < count; i++) {
         enemiesArray[i] = new Enemy(Math.floor(Math.random() * (3 - 1 + 1) + 1), x)
         x += 40;
+    }
+
+    switch (difficulty) {
+        case 'boss':
+            return [new Enemy(2, 20, 100)];
+
     }
     // return enemiesArray;
     return [new Enemy(2, 20)];

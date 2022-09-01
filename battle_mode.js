@@ -46,7 +46,11 @@ function battleMode() {
             enemies.forEach((enemy, index) => {
                 if (enemy.health > 0) {
                     player.takeDamage(enemy.attack());
+                    if (enemies[0].stepBeforeSpawn) {
+                        player.takeDamage(boss.attack());
+                    }
                 } else {
+                    console.log(enemy);
                     let earned = enemy.die();
                     earnedXpInBattle += earned[0];
                     earnedMoneyInBattle += earned[1];
@@ -97,3 +101,26 @@ function displayAbilities() {
     y = canvas.height * 0.7;
     selectColor(player.fightSkills, 15, y);
 }
+
+
+// document.addEventListener('keydown', (e) => {
+//     switch (e.key) {
+//         case 'ArrowDown':
+//             step = false;
+//             break;
+//         case 'ArrowUp':
+//             gamemode = lastGamemode;
+//             context.clearRect(0, 0, canvas.width, canvas.height);
+//             line = 0;
+//             break;
+//         case 'ArrowLeft':
+//             attackedEnemy = enemies[currentEnemy];
+//             player.takeDamage(boss.attack());
+//             break;
+//         case 'ArrowRight':
+//             currentEnemy++;
+//             break;
+
+//     }
+
+// })
