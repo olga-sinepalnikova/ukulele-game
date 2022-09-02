@@ -94,7 +94,7 @@
 			(рекомендумый)</button>
 		<button onclick="getInstrument('guitar'); toggleLiveInput()" class="chooseInstrument">Гитара</button>
 		<button onclick="getInstrument('bass-guitar'); toggleLiveInput()" class="chooseInstrument">Басс-гитара</button>
-		<button onclick="getInstrument('piano'); toggleLiveInput()" class="chooseInstrument">Пианино</button>
+		<!-- <button onclick="getInstrument('piano'); toggleLiveInput()" class="chooseInstrument">Пианино</button> -->
 		<button onclick="getInstrument('custom'); toggleLiveInput()" class="chooseInstrument">Создать своё
 			управление</button>
 
@@ -405,6 +405,10 @@
 
 	<p id="gamemode"></p>
 	<h1 id="enemy_hp"></h1>
+	<div id="images">
+		<img src="imgs/helping/map.jpg" alt="карта" style="display: none; float: left;" id="map_image" width="300">
+		<img id="instrument" src="imgs/helping/map.jpg" alt="карта" style="display: none;" width="600">
+	</div>
 	<!-- just used for debugging
 	<canvas id="waveform" width="512" height="256"></canvas> -->
 	<script src="saving_script.js"></script>

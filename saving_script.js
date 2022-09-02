@@ -60,7 +60,9 @@ function getInstrument(inst) {
 
     }
     instrument = inst;
-    console.log(inst);
+    let img = document.getElementById("instrument");
+    img.src = `imgs/helping/${instrument}.jpg`;
+    img.style.display = 'block';
 }
 
 var actions = {

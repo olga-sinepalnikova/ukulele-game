@@ -109,9 +109,14 @@ function displayAbilities() {
 //             step = false;
 //             break;
 //         case 'ArrowUp':
-//             gamemode = lastGamemode;
+//             gamemode = 'map';
+//             player.room.read = true;
 //             context.clearRect(0, 0, canvas.width, canvas.height);
 //             line = 0;
+//             if (player.room == levels.startRoom) {
+//                 let mapImage = document.getElementById("map_image");
+//                 mapImage.style.display = 'block';
+//             }
 //             break;
 //         case 'ArrowLeft':
 //             attackedEnemy = enemies[currentEnemy];

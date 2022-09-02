@@ -48,19 +48,32 @@ function createEnemiesArray(difficulty) {
     //посмотреть как настроить к сложности
     let count = Math.floor(Math.random() * (3 - 1 + 1) + 1);
     let enemiesArray = [];
-    let x = 20
-    for (let i = 0; i < count; i++) {
-        enemiesArray[i] = new Enemy(Math.floor(Math.random() * (3 - 1 + 1) + 1), x)
-        x += 40;
-    }
+    let y = 20
+
 
     switch (difficulty) {
         case 'boss':
-            return [new Enemy(2, 20, 100)];
+            for (let i = 0; i < count; i++) {
+                enemiesArray[i] = new Enemy(Math.floor(Math.random() * (40 - 1 + 30) + 30), y, 100)
+                y += 40;
+            }
+            break;
+        case 'medium':
+            for (let i = 0; i < count; i++) {
+                enemiesArray[i] = new Enemy(Math.floor(Math.random() * (29 - 1 + 10) + 10), y, 100)
+                y += 40;
+            }
+            break;
+        case 'easy':
+            for (let i = 0; i < count; i++) {
+                enemiesArray[i] = new Enemy(Math.floor(Math.random() * (9 - 1 + 1) + 1), y, 100)
+                y += 40;
+            }
+            break;
 
     }
-    // return enemiesArray;
-    return [new Enemy(2, 20)];
+    return enemiesArray;
+    // return [new Enemy(2, 20)];
 
     // return [new Enemy(2, 20), new Enemy(4, 60), new Enemy(3, 100)];
 }

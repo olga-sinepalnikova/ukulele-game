@@ -18,12 +18,20 @@ function outputLore(currentRoom) {
                 gamemode = lastGamemode;
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 line = 0;
+                if (player.room == levels.startRoom) {
+                    let mapImage = document.getElementById("map_image");
+                    mapImage.style.display = 'block';
+                }
             }
         } else if (noteElem.innerText == actions.cutscene.skip) {
             currentRoom.read = true;
             gamemode = lastGamemode;
             context.clearRect(0, 0, canvas.width, canvas.height);
             line = 0;
+            if (player.room == levels.startRoom) {
+                let mapImage = document.getElementById("map_image");
+                mapImage.style.display = 'block';
+            }
         }
     }
 

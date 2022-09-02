@@ -89,8 +89,8 @@ class Player {
                 }
             }
 
-            if (this.room !== levels.startRoom) {
-                // this.startBattle();
+            if (this.room !== levels.startRoom || this.room !== levels.save) {
+                this.startBattle();
             }
 
         }
