@@ -13,5 +13,3 @@ switch (goal) {
         levels.goal.down = 'boss';
         break;
 }
-
-console.log(levels['goal']);

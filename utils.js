@@ -5,7 +5,7 @@ var smallBuffer = [];
 var keyboardDown = false;
 var MIN_DURATION = 15; // было константой
 
-const CURRENT_ENEMY_COLOR = '#FF951D';
+const CURRENT_ENEMY_COLOR = '#25CC00';
 const ENEMY_COLOR = '#ED1B1B';
 
 const AVAILABLE_ABILITY_COLOR = '#17D0C8';

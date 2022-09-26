@@ -1,6 +1,11 @@
 var canvas = document.getElementById('game_canvas');
 var context = canvas.getContext('2d');
 
+context.msImageSmoothingEnabled = false;
+context.mozImageSmoothingEnabled = false;
+context.webkitImageSmoothingEnabled = false;
+context.imageSmoothingEnabled = false;
+
 var gamemode = 'map'; // 0/map - бродилка по карте, 1/battle - бой с врагами, 2/cutscene - катсцена, 3/menu - менюшки, 4/chooseEnemy - выбор врага
 var lastGamemode = gamemode;
 var gamemodeText = document.getElementById('gamemode');
@@ -9,18 +14,19 @@ var boss = undefined;
 
 function startGame() {
     context.clearRect(0, 0, canvas.width, canvas.height);
+    drawBG();
     if (Array.isArray(enemies)) {
         if (enemies.length > 0) {
             if (enemies[currentEnemy]) {
-                enemy_hp.innerHTML = `Враг - ${enemies[currentEnemy].health} || Игрок - ${player.currentHealth}, lvl - ${player.level}, exp - ${player.xp}`;
+                // enemy_hp.innerHTML = `Враг - ${enemies[currentEnemy].health} || Игрок - ${player.currentHealth}, lvl - ${player.level}, exp - ${player.xp}`;
             }
         }
 
     } else {
-        enemy_hp.innerHTML = `Враг - ??? || Игрок - ${player.currentHealth}, lvl - ${player.level}, exp - ${player.xp}`;
+        // enemy_hp.innerHTML = `Враг - ??? || Игрок - ${player.currentHealth}, lvl - ${player.level}, exp - ${player.xp}`;
     }
 
-    gamemodeText.innerText = gamemode;
+    // gamemodeText.innerText = gamemode;
     switch (gamemode) {
         case 'map':
             mapMode();
@@ -41,7 +47,7 @@ function startGame() {
             menuMode();
             break;
         case 'end':
-            gameText.innerText = 'The end, обновите страницу для новой игры';
+            // gameText.innerText = 'The end, обновите страницу для новой игры';
             break;
     }
 
@@ -54,6 +60,7 @@ function startGame() {
 
 function mapMode() {
     context.clearRect(0, 0, canvas.width, canvas.height);
+    drawBG();
     if (!customizing) player.move();  // если игрок не в настройках -> двигаться
     player.draw();
 
@@ -83,7 +90,7 @@ function mapMode() {
                 enemy.update(ENEMY_COLOR);
             });
         } else {
-            enemies = createEnemiesArray();
+            enemies = createEnemiesArray('easy');
         };
 
         gamemode = 'cutscene';
@@ -113,14 +120,24 @@ function cutsceneMode() {
 
 function menuMode() {
     // тут должы быть настройки (и статы игрока ?)
-    gameText.innerText = `Чтобы выйти сыграйте В`;
+    context.fillStyle = '#9BC4C6';
+    context.fillRect(10, 10, canvas.width - 20, canvas.height - 20);
+    context.font = "bold 36px Calibri";
+    context.fillStyle = "black";
+    context.fillText(`Уровень - ${player.level}`, 20, canvas.height * 0.3, canvas.width - 30);
+    context.fillText(`Опыт - ${player.xp}/${player.maxXp}`, 20, canvas.height * 0.45, canvas.width - 30);
+    context.fillText(`Здоровье - ${player.currentHealth}/${player.maxHealth}`, 20, canvas.height * 0.60, canvas.width - 30);
+    context.fillText(`Количество монет - ${player.money}`, 20, canvas.height * 0.75, canvas.width - 30);
+
+    context.font = "bold 24px Calibri";
+    context.fillText(`Вернуться к игре [${actions.menu.exit}]`, canvas.width * 0.6, canvas.height * 0.9)
+
+    // gameText.innerText = `Чтобы выйти сыграйте В`;
     if (ableToActCheck()) {
         switch (noteElem.innerText) {
             case actions.menu.exit:
                 gamemode = 'map';
                 break;
-            // case 'A':
-            //     enableUserSettings();
         }
     }
 }

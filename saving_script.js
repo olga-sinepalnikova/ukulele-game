@@ -7,7 +7,7 @@ var mapLeft = document.querySelector('select#mapModeLeft');
 var mapDown = document.querySelector('select#mapModeDown');
 var mapRight = document.querySelector('select#mapModeRight');
 var mapEnterMenu = document.querySelector('select#mapModeInMenu');
-var mapEnterBattle = document.querySelector('select#mapModeInBattle');
+// var mapEnterBattle = document.querySelector('select#mapModeInBattle');
 
 var battleFire = document.querySelector('select#battleModeFire');
 var battleIce = document.querySelector('select#battleModeIce');
@@ -29,13 +29,13 @@ document.addEventListener('keydown', (e) => {
             case 's':
             case 'ы':
                 console.log('wkwk');
-                if (settingsUser.style.display == 'block') {
+                if (settingsUser.style.display == 'flex') {
                     customizing = false;
 
                     settingsUser.style.display = 'none';
                 } else {
                     customizing = true;
-                    settingsUser.style.display = 'block';
+                    settingsUser.style.display = 'flex';
                 }
                 break;
             case 'd':
@@ -50,19 +50,20 @@ document.addEventListener('keydown', (e) => {
 
 var instrument;
 function getInstrument(inst) {
+    instrument = inst;
     if (inst == 'custom') {
-        if (settingsUser.style.display == 'block') {
+        if (settingsUser.style.display == 'flex') {
             settingsUser.style.display = 'none';
         } else {
-            settingsUser.style.display = 'block';
+            settingsUser.style.display = 'flex';
         }
     } else {
-
+        let img = document.getElementById("instrument");
+        img.src = `imgs/helping/${instrument}.jpg`;
+        img.style.display = 'block';
+        document.getElementById('game_container').style.display = 'flex';
     }
-    instrument = inst;
-    let img = document.getElementById("instrument");
-    img.src = `imgs/helping/${instrument}.jpg`;
-    img.style.display = 'block';
+    document.getElementsByClassName('choose_instrument')[0].style.display = 'none';
 }
 
 var actions = {
@@ -71,7 +72,7 @@ var actions = {
         left: 'F',
         down: 'F#',
         right: 'G',
-        enterBattle: 'E',
+        // enterBattle: 'E',
         enterMenu: 'A#'
     },
     battle: {
@@ -119,9 +120,9 @@ var customizing = false;
 function enableUserSettings() {
 
 
-    settingsUser.style.display = 'block';
+    settingsUser.style.display = 'flex';
 
-    if (areNotEqual(mapUp.value, mapLeft.value, mapDown.value, mapRight.value, mapEnterMenu.value, mapEnterBattle.value)) {
+    if (areNotEqual(mapUp.value, mapLeft.value, mapDown.value, mapRight.value, mapEnterMenu.value)) { //, mapEnterBattle.value
         if (areNotEqual(battleFire.value, battleIce.value, battlePlants.value, battleHit.value, battleStrongHit.value, battleHealing.value, battleBlock.value)) {
             if (areNotEqual(chooseUp.value, chooseDown.value, chooseChoose.value)) {
                 durationUserValue = document.querySelector("input#durationUser").value;
@@ -134,7 +135,7 @@ function enableUserSettings() {
                 actions.map.down = mapDown.value;
                 actions.map.right = mapRight.value;
                 actions.map.enterMenu = mapEnterMenu.value;
-                actions.map.enterBattle = mapEnterBattle.value;
+                // actions.map.enterBattle = mapEnterBattle.value;
 
                 actions.battle.fireball = battleFire.value;
                 actions.battle.iceball = battleIce.value;
@@ -157,11 +158,10 @@ function enableUserSettings() {
                 settingsText = `Окей, так можно
                 Настройки пропадут через 5с`;
                 sessionStorage.setItem('settings', JSON.stringify(userSettings));
-                setTimeout(() => {
-                    settingsUser.style.display = 'none';
-                    customizing = false;
-                }, 5000);
+                settingsUser.style.display = 'none';
+                customizing = false;
 
+                document.getElementById('game_container').style.display = 'flex';
 
             } else {
                 settingsText = `Вы не можете ставить одинаковые ноты`;

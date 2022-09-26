@@ -6,10 +6,15 @@ function battleMode() {
     let act = actions.battle;
     enemies.forEach(enemy => {
         if (enemy) {
-            enemy.update(ENEMY_COLOR);
+            if (enemy.frozen[0]) {
+                enemy.update("rgba(0, 255, 236, 0.2)");
+            } else {
+                enemy.update();
+
+            }
         }
     });
-    if (enemies[currentEnemy]) enemies[currentEnemy].update(CURRENT_ENEMY_COLOR);
+    if (enemies[currentEnemy]) enemies[currentEnemy].update();
     player.draw();
     displayAbilities();
 
@@ -17,10 +22,10 @@ function battleMode() {
         if (ableToActCheck() && step && attackedEnemy) {
             // console.log(enemies);
             switch (noteElem.innerText) {
-                case act.fire:
+                case act.fireball:
                     step = player.magic(attackedEnemy, 'fire');
                     break;
-                case act.fire:
+                case act.iceball:
                     step = player.magic(attackedEnemy, 'ice');
                     break;
                 case act.plants:
@@ -45,7 +50,13 @@ function battleMode() {
             console.log('enemy attack');
             enemies.forEach((enemy, index) => {
                 if (enemy.health > 0) {
-                    player.takeDamage(enemy.attack());
+                    if (enemy.frozen[0] && !enemy.poisoned[0]) {
+                        enemy.frozen[1]--;
+                    } else if (enemy.poisoned[0] && !enemy.frozen[0]) {
+                        enemy.poisoned[1]--;
+                    };
+                    if (!enemy.frozen[0] && !enemy)
+                        player.takeDamage(enemy.attack());
                     if (enemies[0].stepBeforeSpawn) {
                         player.takeDamage(boss.attack());
                     }

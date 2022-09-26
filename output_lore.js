@@ -40,7 +40,7 @@ function outputLore(currentRoom) {
     context.fillText(text_lore[line], 15, canvas.height * 0.8, canvas.width - 30);
 
     context.font = "bold 24px Calibri";
-    context.fillText(`[далее - ${actions.cutscene.nextPhrase}]`, canvas.width * 0.5, canvas.height * 0.95, canvas.width - 30);
-    context.fillText(`[пропустить - ${actions.cutscene.skip}]`, canvas.width * 0.7, canvas.height * 0.95, canvas.width - 30);
+    context.fillText(`[далее - ${actions.cutscene.nextPhrase}]`, canvas.width * 0.49, canvas.height * 0.93, canvas.width - 30);
+    context.fillText(`[пропустить - ${actions.cutscene.skip}]`, canvas.width * 0.69, canvas.height * 0.93, canvas.width - 30);
     // console.log(text_lore);
 };

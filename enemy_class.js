@@ -1,13 +1,17 @@
 class Enemy {
-    constructor(level, y, x = 10) {
-        this.width = 20;
-        this.height = 20;
+    constructor(level, y, x = 20) {
+        this.width = 35;
+        this.height = this.width;
+        this.img = new Image();
+        this.img.src = "imgs/sprites/enemy.png";
         this.x = x;
         this.y = y;
         this.level = level;
         this.damage = 10;
         this.health = Math.floor(level * (Math.random() * (level * 10 - 11) + 10));
         this.chanceOfInstantDeath = 0.1;
+        this.frozen = [false, 0];
+        this.poisoned = [false, 0];
     }
 
     attack() {
@@ -26,10 +30,16 @@ class Enemy {
         // chance of block 3 of player.damage / enemy.level 25-75%
     }
 
-    update(color) {
+    update(color = 0) {
         // animation-loop
-        context.fillStyle = color;
-        context.fillRect(this.x, this.y, this.width, this.height);
+        context.drawImage(this.img, this.x, this.y, this.width, this.height);
+        if (color) {
+            context.fillStyle = color;
+            context.fillRect(this.x, this.y, this.width, this.height)
+        }
+        context.font = "bold 18px Calibri";
+        context.fillStyle = 'black';
+        context.fillText(this.health, this.x + 1, this.y + this.height + 20);
     }
 
     die() {
@@ -55,27 +65,23 @@ function createEnemiesArray(difficulty) {
         case 'boss':
             for (let i = 0; i < count; i++) {
                 enemiesArray[i] = new Enemy(Math.floor(Math.random() * (40 - 1 + 30) + 30), y, 100)
-                y += 40;
+                y += 70;
             }
             break;
         case 'medium':
             for (let i = 0; i < count; i++) {
-                enemiesArray[i] = new Enemy(Math.floor(Math.random() * (29 - 1 + 10) + 10), y, 100)
-                y += 40;
+                enemiesArray[i] = new Enemy(Math.floor(Math.random() * (29 - 1 + 10) + 10), y)
+                y += 70;
             }
             break;
         case 'easy':
             for (let i = 0; i < count; i++) {
-                enemiesArray[i] = new Enemy(Math.floor(Math.random() * (9 - 1 + 1) + 1), y, 100)
-                y += 40;
+                enemiesArray[i] = new Enemy(Math.floor(Math.random() * (5 - 1 + 1) + 1), y)
+                y += 70;
             }
             break;
 
     }
     return enemiesArray;
-    // return [new Enemy(2, 20)];
-
-    // return [new Enemy(2, 20), new Enemy(4, 60), new Enemy(3, 100)];
 }
 var enemy_hp = document.getElementById('enemy_hp');
-enemy_hp.innerHTML = `Враг - ??? || Игрок - ${player.currentHealth}, lvl - ${player.level}, exp - ${player.xp}`;

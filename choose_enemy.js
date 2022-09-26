@@ -10,13 +10,19 @@ function chooseEnemy() {
     };
 
     if (player.currentHealth > 0 && enemies.length > 0) {
-        console.log(enemies);
+        // console.log(enemies);
         enemies.forEach(enemy => {
-            enemy.update(ENEMY_COLOR);
+            enemy.update();
         });
         player.draw();
 
-        if (enemies[currentEnemy]) enemies[currentEnemy].update(CURRENT_ENEMY_COLOR);
+        if (enemies[currentEnemy]) {
+            context.fillStyle = CURRENT_ENEMY_COLOR;
+            context.fillRect(enemies[currentEnemy].x - 5, enemies[currentEnemy].y - 5,
+                enemies[currentEnemy].width + 10, enemies[currentEnemy].height + 10);
+
+            enemies[currentEnemy].update();
+        }
 
     } else {
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -53,10 +59,10 @@ function chooseEnemy() {
 }
 
 function displayControls() {
-    y = canvas.height * 0.75;
+    y = canvas.height * 0.72;
 
     context.font = "bold 24px Calibri";
-    context.fillStyle = 'gray';
+    context.fillStyle = 'black';
 
     context.fillText(`выбор вверх  [${actions.chooseEnemy.up}]`, 15, y, canvas.width - 30);
     y += 30;
