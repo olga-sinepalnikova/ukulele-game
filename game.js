@@ -1,6 +1,7 @@
 var canvas = document.getElementById('game_canvas');
 var context = canvas.getContext('2d');
 
+// Для пиксельной графики
 context.msImageSmoothingEnabled = false;
 context.mozImageSmoothingEnabled = false;
 context.webkitImageSmoothingEnabled = false;
@@ -65,17 +66,18 @@ function mapMode() {
     player.draw();
 
     // убрать перед выпуском
-    if (ableToActCheck() && noteElem.innerText == actions.map.enterBattle) {
-        gamemode = 'chooseEnemy';
-    };
+    // if (ableToActCheck() && noteElem.innerText == actions.map.enterBattle) {
+    //     gamemode = 'chooseEnemy';
+    // };
 
-    if (player.room == levels['save'] || player.room == levels['save2']) {
+    if (!player.room.read && (player.room == levels['save'] || player.room == levels['save2'])) {
         var userSettings = {
             'duration': durationUserValue,
             'actions': actions,
             'player': player,
         }
         sessionStorage.setItem('settings', JSON.stringify(userSettings));
+        gamemode = 'map';
     };
 
     startCutscene();
@@ -87,10 +89,10 @@ function mapMode() {
         player.y = canvas.height / 2 - player.width / 2;
         if (enemies) {
             enemies.forEach(enemy => {
-                enemy.update(ENEMY_COLOR);
+                enemy.update();
             });
         } else {
-            enemies = createEnemiesArray('easy');
+            enemies = createEnemiesArray('1 battle');
         };
 
         gamemode = 'cutscene';

@@ -19,7 +19,7 @@ function battleMode() {
     displayAbilities();
 
     if (player.currentHealth > 0 && enemies.length > 0) {
-        if (ableToActCheck() && step && attackedEnemy) {
+        if (ableToActCheck() && step && attackedEnemy && gamemode == 'battle') {
             // console.log(enemies);
             switch (noteElem.innerText) {
                 case act.fireball:
@@ -55,7 +55,7 @@ function battleMode() {
                     } else if (enemy.poisoned[0] && !enemy.frozen[0]) {
                         enemy.poisoned[1]--;
                     };
-                    if (!enemy.frozen[0] && !enemy)
+                    if (!enemy.frozen[0] && enemy)
                         player.takeDamage(enemy.attack());
                     if (enemies[0].stepBeforeSpawn) {
                         player.takeDamage(boss.attack());
@@ -82,6 +82,7 @@ function battleMode() {
     } else {
         enemies = undefined;
         gamemode = 'map';
+        lastGamemode = gamemode;
         step = true;
     };
 };

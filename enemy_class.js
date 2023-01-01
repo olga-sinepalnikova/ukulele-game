@@ -63,6 +63,7 @@ function createEnemiesArray(difficulty) {
 
     switch (difficulty) {
         case 'boss':
+            // TODO: mske a func
             for (let i = 0; i < count; i++) {
                 enemiesArray[i] = new Enemy(Math.floor(Math.random() * (40 - 1 + 30) + 30), y, 100)
                 y += 70;
@@ -79,6 +80,11 @@ function createEnemiesArray(difficulty) {
                 enemiesArray[i] = new Enemy(Math.floor(Math.random() * (5 - 1 + 1) + 1), y)
                 y += 70;
             }
+            break;
+
+        case '1 battle':
+
+            enemiesArray[0] = new Enemy(1, 90)
             break;
 
     }

@@ -72,7 +72,6 @@ var actions = {
         left: 'F',
         down: 'F#',
         right: 'G',
-        // enterBattle: 'E',
         enterMenu: 'A#'
     },
     battle: {
@@ -118,11 +117,9 @@ if (last) {
 
 var customizing = false;
 function enableUserSettings() {
-
-
     settingsUser.style.display = 'flex';
 
-    if (areNotEqual(mapUp.value, mapLeft.value, mapDown.value, mapRight.value, mapEnterMenu.value)) { //, mapEnterBattle.value
+    if (areNotEqual(mapUp.value, mapLeft.value, mapDown.value, mapRight.value, mapEnterMenu.value)) {
         if (areNotEqual(battleFire.value, battleIce.value, battlePlants.value, battleHit.value, battleStrongHit.value, battleHealing.value, battleBlock.value)) {
             if (areNotEqual(chooseUp.value, chooseDown.value, chooseChoose.value)) {
                 durationUserValue = document.querySelector("input#durationUser").value;
@@ -135,7 +132,6 @@ function enableUserSettings() {
                 actions.map.down = mapDown.value;
                 actions.map.right = mapRight.value;
                 actions.map.enterMenu = mapEnterMenu.value;
-                // actions.map.enterBattle = mapEnterBattle.value;
 
                 actions.battle.fireball = battleFire.value;
                 actions.battle.iceball = battleIce.value;
@@ -179,7 +175,7 @@ function enableUserSettings() {
 
 function clearSettings() {
     // console.log(mapDown.querySelector('option[selected]').selected);
-    let list_of_settings = [mapDown, mapLeft, mapRight, mapUp, mapEnterBattle, mapEnterMenu, battleBlock, battleFire, battleHealing, battleHit, battleIce,
+    let list_of_settings = [mapDown, mapLeft, mapRight, mapUp, mapEnterMenu, battleBlock, battleFire, battleHealing, battleHit, battleIce,
         battlePlants, battlePlants, battleStrongHit, chooseChoose, chooseDown, chooseUp];
     for (let i = 0; i < list_of_settings.length; i++) {
         list_of_settings[i].querySelector('option[selected]').selected = true;

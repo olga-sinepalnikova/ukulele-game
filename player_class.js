@@ -25,7 +25,7 @@ class Player {
             strongHit: [false, 'усиленный удар'], //изначально false
         };
         this.money = 0;
-        this.room = levels.save; // levels.startRoom// levels.lvl1_room2;
+        this.room = levels.lvl1_room2; // levels.startRoom// levels.lvl1_room2;
         this.lastCoords = [this.x, this.y];
     }
 
