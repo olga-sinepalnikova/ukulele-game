@@ -72,7 +72,7 @@ var actions = {
         left: 'F',
         down: 'F#',
         right: 'G',
-        enterMenu: 'A#'
+        enterMenu: 'A'
     },
     battle: {
         fireball: 'A',

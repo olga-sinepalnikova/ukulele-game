@@ -111,6 +111,7 @@ class Player {
             }
 
             if (this.room != levels.startRoom) {
+                console.log('Начинается бой из игрока')
                 this.startBattle();
             }
 
@@ -157,27 +158,26 @@ class Player {
         this.lastCoords = [this.x, this.y];
         switch (this.room.difficult) {
             case 'easy':
-                if (chance <= 0.3) {
+                if (chance <= 0.1) {
                     this.x = canvas.width / 2;
                     this.y = canvas.height / 2 - this.width / 2;
                     gamemode = 'chooseEnemy';
+                    enemies = createEnemiesArray(this.room.difficult);
+
                 }
                 break;
             case 'medium':
-                if (chance <= 0.49) {
+                if (chance >= 0.8) {
                     this.x = canvas.width / 2;
                     this.y = canvas.height / 2 - this.width / 2;
                     console.log('med');
                     gamemode = 'chooseEnemy';
+                    enemies = createEnemiesArray(this.room.difficult);
+
                 }
-                break;
-            default:
-                this.x = canvas.width / 2;
-                this.y = canvas.height / 2 - this.width / 2;
                 break;
         }
 
-        createEnemiesArray(this.room.difficult);
     }
 
     attack(enemy, type) {

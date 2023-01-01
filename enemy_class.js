@@ -80,10 +80,10 @@ function createEnemiesArray(difficulty) {
                 enemiesArray[i] = new Enemy(Math.floor(Math.random() * (5 - 1 + 1) + 1), y)
                 y += 70;
             }
+            console.log(enemiesArray);
             break;
 
         case '1 battle':
-
             enemiesArray[0] = new Enemy(1, 90)
             break;
 

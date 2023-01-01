@@ -65,7 +65,7 @@ function battleMode() {
                     let earned = enemy.die();
                     earnedXpInBattle += earned[0];
                     earnedMoneyInBattle += earned[1];
-                    enemies.splice(index, 1)
+                    enemies.splice(index, 1);
                 };
             });
             gamemode = 'chooseEnemy';

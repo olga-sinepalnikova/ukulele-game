@@ -1,18 +1,15 @@
 var currentEnemy = 0;
 function chooseEnemy() {
-    let fight = false;
     if (player.currentHealth > 0 && enemies.length == 0) {
         console.log('вызвается из ChooseEnemy player.currentHealth > 0 && enemies.length == 0');
         console.log('гамемоде', gamemode, lastGamemode);
-        // showStats();
+        showStats();
         console.log(enemies);
 
         player.x = player.lastCoords[0];
         player.y = player.lastCoords[1];
 
-        gamemode = 'map';
-        lastGamemode = 'map';
-        gamemode = lastGamemode;
+        return;
     };
 
     if (player.currentHealth > 0 && enemies.length > 0) {
@@ -31,6 +28,8 @@ function chooseEnemy() {
 
             enemies[currentEnemy].update();
         }
+    } else {
+        showStats();
     }
 
     if (ableToActCheck()) {
@@ -54,13 +53,13 @@ function chooseEnemy() {
 
             case act.choose:
                 console.log(enemies[currentEnemy]);
-                if (player.currentHealth > 0 && enemies.length == 0) {
-                    console.log('вызвается из проверки на действие')
-                    showStats();
-                    gamemode = 'map';
-                } else {
-                    gamemode = 'battle';
-                }
+                // if (player.currentHealth > 0 && enemies.length == 0) {
+                //     console.log('вызвается из проверки на действие')
+                //     showStats();
+                //     gamemode = 'map';
+                // } else {
+                gamemode = 'battle';
+                // }
 
                 attackedEnemy = enemies[currentEnemy];
                 break;
@@ -101,8 +100,5 @@ function showStats() {
     context.fillText(earnedXpInBattle + ' ед. опыта', 30, canvas.height * 0.6, canvas.width - 30);
     context.fillText(earnedMoneyInBattle + ' монет', 30, canvas.height * 0.5, canvas.width - 30);
     context.fillText(`принять [${actions.chooseEnemy.choose}]`, 30, canvas.height * 0.8, canvas.width - 30);
-
-    gamemode = 'map';
-    lastGamemode = gamemode;
 
 }
