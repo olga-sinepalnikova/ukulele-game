@@ -1,10 +1,14 @@
 var currentEnemy = 0;
+var isFighting = false;
 function chooseEnemy() {
     if (player.currentHealth > 0 && enemies.length == 0) {
         console.log('вызвается из ChooseEnemy player.currentHealth > 0 && enemies.length == 0');
         console.log('гамемоде', gamemode, lastGamemode);
         showStats();
-        console.log(enemies);
+        if (ableToActCheck() && noteElem.innerText == actions.chooseEnemy.choose) {
+            gamemode = 'map';
+            // clearRect(0, 0);
+        }
 
         player.x = player.lastCoords[0];
         player.y = player.lastCoords[1];
@@ -14,8 +18,6 @@ function chooseEnemy() {
 
     if (player.currentHealth > 0 && enemies.length > 0) {
         displayControls();
-
-        console.log(enemies);
         enemies.forEach(enemy => {
             enemy.update();
         });
@@ -100,5 +102,5 @@ function showStats() {
     context.fillText(earnedXpInBattle + ' ед. опыта', 30, canvas.height * 0.6, canvas.width - 30);
     context.fillText(earnedMoneyInBattle + ' монет', 30, canvas.height * 0.5, canvas.width - 30);
     context.fillText(`принять [${actions.chooseEnemy.choose}]`, 30, canvas.height * 0.8, canvas.width - 30);
-
+    isFighting = true;
 }

@@ -61,7 +61,6 @@ function battleMode() {
                         player.takeDamage(boss.attack());
                     }
                 } else {
-                    console.log(enemy);
                     let earned = enemy.die();
                     earnedXpInBattle += earned[0];
                     earnedMoneyInBattle += earned[1];

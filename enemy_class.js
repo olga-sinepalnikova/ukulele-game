@@ -8,7 +8,7 @@ class Enemy {
         this.y = y;
         this.level = level;
         this.damage = 10;
-        this.health = Math.floor(level * (Math.random() * (level * 10 - 11) + 10));
+        this.health = Math.floor(level * (Math.random() + 10));
         this.chanceOfInstantDeath = 0.1;
         this.frozen = [false, 0];
         this.poisoned = [false, 0];

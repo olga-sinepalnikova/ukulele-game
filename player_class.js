@@ -25,7 +25,7 @@ class Player {
             strongHit: [false, 'усиленный удар'], //изначально false
         };
         this.money = 0;
-        this.room = levels.lvl1_room2; // levels.startRoom// levels.lvl1_room2;
+        this.room = levels.save; // levels.startRoom// levels.lvl1_room2;
         this.lastCoords = [this.x, this.y];
     }
 
@@ -39,20 +39,27 @@ class Player {
     }
 
     move() {
+
         if (ableToActCheck()) {
             if (noteElem.innerText == actions.map.up) {
                 if (0 <= (this.y - this.height)) {
                     this.y -= this.height;
                 } else if (0 > (this.y - this.height)) {
-                    console.log('triggered up');
-                    if (265 > this.x && this.x < 275) {
+
+                    if (259 < this.x && this.x < 275) {
+                        console.log('triggered up', this.x);
                         if (this.room.up) {
                             this.changeRoom('up');
-                            this.y = canvas.height - this.height - 5;
+                            this.y = canvas.height - this.height - 10;
                         } else {
-                            this.y = 5;
+                            this.y = 10;
                         }
                     }
+                }
+
+                if (this.room != levels.startRoom && gamemode != 'cutscene') {
+                    console.log('Начинается бой из игрока')
+                    this.startBattle();
                 }
 
             }
@@ -62,15 +69,21 @@ class Player {
                 if ((this.y + this.height) <= (canvas.height - this.height)) {
                     this.y += this.height
                 } else if ((this.y + this.height) > (canvas.height - this.height)) {
-                    console.log('triggered down');
-                    if (265 > this.x && this.x < 275) {
+
+                    if (259 < this.x && this.x < 275) {
+                        console.log('triggered down');
                         if (this.room.down) {
                             this.changeRoom('down');
-                            this.y = 5;
+                            this.y = 10;
                         } else {
-                            this.y = canvas.height - this.height - 5;
+                            this.y = canvas.height - this.height - 10;
                         }
                     }
+                }
+
+                if (this.room != levels.startRoom && gamemode != 'cutscene') {
+                    console.log('Начинается бой из игрока')
+                    this.startBattle();
                 }
 
             }
@@ -80,14 +93,19 @@ class Player {
                 if (0 <= (this.x - this.width)) {
                     this.x -= this.width;
                 } else if (0 > (this.x - this.width)) {
-                    if (125 > this.y && this.y < 135) {
+                    if (100 < this.y && this.y < 115) {
                         if (this.room.left) {
                             this.changeRoom('left');
-                            this.x = canvas.width - this.width - 5;
+                            this.x = canvas.width - this.width - 10;
                         } else {
-                            this.x = 5;
+                            this.x = 10;
                         }
                     }
+                }
+
+                if (this.room != levels.startRoom && gamemode != 'cutscene') {
+                    console.log('Начинается бой из игрока')
+                    this.startBattle();
                 }
 
             }
@@ -97,23 +115,25 @@ class Player {
                 if ((this.x + this.width) <= (canvas.width - this.width)) {
                     this.x += this.width
                 } else if ((this.x + this.width) > (canvas.width - this.width)) {
-                    if (125 > this.y && this.y < 135) {
+                    if (100 < this.y && this.y < 115) {
                         if (this.room.right) {
                             this.changeRoom('right');
-                            this.x = 5;
+                            this.x = 10;
                         } else {
-                            this.x = canvas.width - this.width - 5;
+                            this.x = canvas.width - this.width - 10;
                         }
                     }
 
                 }
 
+                if (this.room != levels.startRoom && gamemode != 'cutscene') {
+                    console.log('Начинается бой из игрока')
+                    this.startBattle();
+                }
+
             }
 
-            if (this.room != levels.startRoom) {
-                console.log('Начинается бой из игрока')
-                this.startBattle();
-            }
+
 
         }
 
@@ -155,6 +175,7 @@ class Player {
 
     startBattle() {
         let chance = Math.random()
+        console.log(chance);
         this.lastCoords = [this.x, this.y];
         switch (this.room.difficult) {
             case 'easy':
