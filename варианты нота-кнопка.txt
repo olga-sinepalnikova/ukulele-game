@@ -1,0 +1,7 @@
+** Первый вариант **
+D	|	forward/up		| w
+F 	|	left				| a
+F#	|	down			| s
+G 	|	right			| d
+C 	|	shoot			| f
+A 	|	block / shield	| q

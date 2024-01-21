@@ -1,0 +1,373 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Игра</title>
+	<link href='http://fonts.googleapis.com/css?family=Alike' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+	<script src="pitchdetect.js"></script>
+
+	<p class="choose_instrument">
+		<!-- <button onclick="toggleLiveInput()">Начать игру</button> -->
+		<!--<button onclick="updatePitch(0);">sample</button>-->
+
+		<button onclick="getInstrument('ukulele'); toggleLiveInput()" class="chooseInstrument">Укулеле
+			(рекомендумый)</button>
+		<button onclick="getInstrument('guitar'); toggleLiveInput()" class="chooseInstrument">Гитара</button>
+		<button onclick="getInstrument('bass-guitar'); toggleLiveInput()" class="chooseInstrument">Басс-гитара</button>
+		<button onclick="getInstrument('custom'); toggleLiveInput()" class="chooseInstrument">Создать своё
+			управление</button>
+
+	</p>
+	<div id="game_container" style="display: none;">
+		<button onclick="cheatLevelUp()">Увеличить уровень до след умения</button>
+		<div class="game">
+			<div id="detector" class="vague">
+				<div class="pitch"><span id="pitch">--</span>Hz</div>
+				<div class="note"><span id="note">--</span></div>
+				<canvas id="output" width=300 height=42></canvas>
+				<div id="detune"><span id="detune_amt">--</span><span id="flat">cents &#9837;</span><span
+						id="sharp">cents
+						&#9839;</span></div>
+			</div>
+
+			<canvas id="game_canvas" width="570" height="290"></canvas>
+
+
+		</div>
+		<div id="images">
+			<img src="imgs/helping/map.jpg" alt="карта" style="display: none; float: left;" id="map_image" width="300">
+			<img id="instrument" src="imgs/helping/map.jpg" alt="ноты" style="display: none;" width="600">
+		</div>
+	</div>
+
+
+	<br>
+	<!-- <p>Войти в настройки можно только в меню или на карте, ваши настройки сохраняются при перезагрузке страницы, но
+		сбрасываются при закрытии браузера (я изменю это позже) войти в настройки - нажать s\ы, сбросить настройки d\в
+	</p> -->
+
+	<div id="settings">
+		<button class="prev" onclick="prevSetting()">&lt;</button>
+		<div class="map setting" id="0" style="display: none;">
+			<p>Минимальная длительность ноты <input type="number" name="input" id="durationUser" max="60" min="5"
+					placeholder="15"></p>
+
+
+			<p>
+				Вверх
+				<select id="mapModeUp" class="mapMode">
+					<option value="A">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D" selected="true">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<p>
+				Влево
+				<select id="mapModeLeft" class="mapMode">
+					<option value="A">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F" selected="true">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<p>
+				Вниз
+				<select id="mapModeDown" class="mapMode">
+					<option value="A">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F">F</option>
+					<option value="F#" selected="true">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<p>
+				Вправо
+				<select id="mapModeRight" class="mapMode">
+					<option value="A">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G" selected="true">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<p>
+				Войти в меню
+				<select id="mapModeInMenu" class="mapMode">
+					<option value="A">A</option>
+					<option value="A#" selected="true">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<p>
+				Войти в бой (для разработки мб уберу потом)
+				<select id="mapModeInBattle" class="mapMode">
+					<option value="A">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E" selected="true">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<button onclick="enableUserSettings()">применить</button>
+		</div>
+
+		<div class="battle setting" id="1" style="display: none;">
+			<p>
+				Огонь
+				<select id="battleModeFire" class="battleMode">
+					<option value="A" selected="true">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<p>
+				Лёд
+				<select id="battleModeIce" class="battleMode">
+					<option value="A">A</option>
+					<option value="A#">A#</option>
+					<option value="B" selected="true">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<p>
+				Растения
+				<select id="battleModePlants" class="battleMode">
+					<option value="A">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+					<option value="C" selected="true">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<p>
+				Удар
+				<select id="battleModeHit" class="battleMode">
+					<option value="A">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D" selected="true">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<p>
+				Сильный удар
+				<select id="battleModeStrongHit" class="battleMode">
+					<option value="A">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E" selected="true">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<p>
+				Лечение
+				<select id="battleModeHealing" class="battleMode">
+					<option value="A">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F" selected="true">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<p>
+				Блок
+				<select id="battleModeBlock" class="battleMode">
+					<option value="A">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G" selected="true">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<button onclick="enableUserSettings()">применить</button>
+		</div>
+		<div class="chooseEnemy setting" id="2" style="display: none;">
+			<p>
+				Вверх
+				<select id="chooseModeUp" class="chooseMode">
+					<option value="A">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E" selected="true">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<p>
+				Вниз
+				<select id="chooseModeDown" class="chooseMode">
+					<option value="A" selected="true">A</option>
+					<option value="A#">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<p>
+				Выбор
+				<select id="chooseModeChoose" class="chooseMode">
+					<option value="A">A</option>
+					<option value="A#" selected="true">A#</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="C#">C#</option>
+					<option value="D">D</option>
+					<option value="D#">D#</option>
+					<option value="E">E</option>
+					<option value="F">F</option>
+					<option value="F#">F#</option>
+					<option value="G">G</option>
+					<option value="G#">G#</option>
+				</select>
+			</p>
+			<button onclick="enableUserSettings()">применить</button>
+
+		</div>
+		<!-- <div class="menu"></div> -->
+		<p id="settingsText"></p>
+		<button class="next" onclick="nextSetting()">></button>
+	</div>
+
+	<!-- <p id="game_text"></p>
+
+	<p id="gamemode"></p>
+	<h1 id="enemy_hp"></h1> -->
+
+	<!-- just used for debugging
+	<canvas id="waveform" width="512" height="256"></canvas> -->
+	<script src="load_images.js"></script>
+	<script src="settings_carousel.js"></script>
+	<script src="saving_script.js"></script>
+	<script src="utils.js"></script>
+	<script src="battle_mode.js"></script>
+	<script src="choose_enemy.js"></script>
+	<script src="game.js"></script>
+
+	<script src="map_data.js"></script>
+	<script src="player_class.js"></script>
+	<script src="output_lore.js"></script>
+	<script src="map.js"></script>
+
+	<script src="enemy_class.js"></script>
+	<script src="boss_class.js"></script>
+
+
+</body>
+
+</html>
